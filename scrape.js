@@ -8,6 +8,6 @@ request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, h
 
   const menuContainer = $('.newsText ul');
 
-  console.log (menuContainer.text().replace(/\.w/g,''));
+  console.log (menuContainer.text().replace(/FI|M,|G,|VE|K,|L,|,| K| L|[()]|/g,''));
 
   }})
