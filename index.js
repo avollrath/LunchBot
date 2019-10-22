@@ -1,5 +1,6 @@
 const request = require('request');
 const cheerio = require('cheerio');
+const SlackBot = require('slackbots');
 var fs = require('fs');
 
 request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, html) => {
@@ -11,11 +12,7 @@ request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, h
 
 
 
-fs.writeFile("menu.json", menuData, function(err) {
-    if (err) {
-        console.log(err);
-    }
-});
+
 
 
   }})
