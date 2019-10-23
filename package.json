@@ -1,11 +1,14 @@
 {
   "name": "lunchlot",
   "version": "1.0.0",
-  "description": "",
+  "description": "informs about the daily menu at Klondyke",
   "main": "index.js",
-
   "scripts": {
     "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.heroku.com/protected-woodland-94018.git"
   },
   "keywords": [],
   "author": "André Vollrath",
@@ -17,6 +20,3 @@
     "slackbots": "^1.2.0"
   }
 }
-
-
-
