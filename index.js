@@ -19,8 +19,6 @@ request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, h
 
   let = menuData = $('.newsText ul').text();
 
-
-
   menuData = menuData
     .replace("Maanantai", "Monday")
     .replace("Tiistai", "Tuesday")
