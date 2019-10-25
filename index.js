@@ -3,6 +3,7 @@ const cheerio = require('cheerio');
 const SlackBot = require('slackbots');
 const dotenv = require('dotenv')
 const schedule = require('node-schedule');
+const http = require("http");
 
 dotenv.config()
 
@@ -17,9 +18,10 @@ const bot = new SlackBot({
 let rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = [new schedule.Range(1, 5)];
 rule.hour = 8;
-rule.minute = 24;
+rule.minute = 57;
  
 const cron = schedule.scheduleJob(rule, function(){
+  http.get("https://klondyke-lunchbot.herokuapp.com/");
   getMenu();
 });
 
@@ -86,9 +88,9 @@ bot.on('error', (err) => {
 })
 
 
-var http = require("http");
+
 setInterval(function() {
-    http.get("https://klondyke-lunchbot.herokuapp.com/");
+   
 }, 300000); // every 5 minutes (300000)
 
 
