@@ -21,7 +21,6 @@ rule.hour = 8;
 rule.minute = 57;
  
 const cron = schedule.scheduleJob(rule, function(){
-  http.get("https://klondyke-lunchbot.herokuapp.com/");
   getMenu();
 });
 
@@ -89,9 +88,6 @@ bot.on('error', (err) => {
 
 
 
-setInterval(function() {
-   
-}, 300000); // every 5 minutes (300000)
 
 
 
