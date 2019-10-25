@@ -29,8 +29,8 @@ const bot = new SlackBot({
 
 let rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = [new schedule.Range(1, 5)];
-rule.hour = 9;
-rule.minute = 46;
+rule.hour = 11;
+rule.minute = 00;
  
 const cron = schedule.scheduleJob(rule, function(){
   getMenu();
@@ -86,6 +86,12 @@ request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, h
     'andre.vollrath',
     "You look hungry, lovely human. It's time to get some nutrition soon:pizza:! Here today's menu at Klondyke:   \n" + dailyMenu(),
     params
+);
+
+bot.postMessageToUser(
+  'tommik',
+  "You look hungry, lovely human. It's time to get some nutrition soon:pizza:! Here today's menu at Klondyke:   \n" + dailyMenu(),
+  params
 );
 
 
