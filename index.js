@@ -2,9 +2,11 @@ const request = require('request');
 const cheerio = require('cheerio');
 const SlackBot = require('slackbots');
 const dotenv = require('dotenv')
+const schedule = require('node-schedule');
 
 dotenv.config()
 
+console.log("LunchBot running...");
 
 const bot = new SlackBot({
   token: `${process.env.BOT_TOKEN}`,
@@ -12,6 +14,17 @@ const bot = new SlackBot({
 })
 
 
+let rule = new schedule.RecurrenceRule();
+rule.dayOfWeek = [new schedule.Range(1, 5)];
+rule.hour = 8;
+rule.minute = 24;
+ 
+const cron = schedule.scheduleJob(rule, function(){
+  getMenu();
+});
+
+
+const getMenu = () => {
 
 request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, html) => {
   if (!error && response.statusCode == 200) {
@@ -58,17 +71,25 @@ request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, h
 
   bot.postMessageToUser(
     'andre.vollrath',
-    ":pizza: You look hungry, lovely human. It's time to get some nutrition soon! \n" + dailyMenu(),
+    "You look hungry, lovely human. It's time to get some nutrition soon:pizza:! Here today's menu at Klondyke:   \n" + dailyMenu(),
     params
 );
 
 
   }})
 
+}
+
 
 bot.on('error', (err) => {
   console.log(err);
 })
+
+
+var http = require("http");
+setInterval(function() {
+    http.get("https://klondyke-lunchbot.herokuapp.com/");
+}, 300000); // every 5 minutes (300000)
 
 
 
