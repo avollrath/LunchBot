@@ -4,10 +4,22 @@ const SlackBot = require('slackbots');
 const dotenv = require('dotenv')
 const schedule = require('node-schedule');
 const http = require("http");
+const PORT = process.env.PORT || 3000;
+
+const server = http.createServer((req, res) => {
+
+   res.writeHead(200, {'Content-Type': 'text/plain'});
+   res.end('Lunchbot running ...\n');
+});
+
+server.listen(PORT, () => {
+   console.log(`Lunchbot running at Port:${PORT}/`);
+})
+
+
 
 dotenv.config()
 
-console.log("LunchBot running...");
 
 const bot = new SlackBot({
   token: `${process.env.BOT_TOKEN}`,
