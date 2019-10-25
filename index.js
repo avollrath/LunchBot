@@ -36,6 +36,8 @@ const cron = schedule.scheduleJob(rule, function(){
   getMenu();
 });
 
+getMenu();
+
 
 const getMenu = () => {
 
