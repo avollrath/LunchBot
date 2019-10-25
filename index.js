@@ -29,8 +29,8 @@ const bot = new SlackBot({
 
 let rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = [new schedule.Range(1, 5)];
-rule.hour = 8;
-rule.minute = 57;
+rule.hour = 9;
+rule.minute = 35;
  
 const cron = schedule.scheduleJob(rule, function(){
   getMenu();
