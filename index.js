@@ -30,7 +30,7 @@ const bot = new SlackBot({
 let rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = [new schedule.Range(1, 5)];
 rule.hour = 11;
-rule.minute = 00;
+rule.minute =46;
  
 const cron = schedule.scheduleJob(rule, function(){
   getMenu();
@@ -61,7 +61,20 @@ request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, h
     .replace(/ G/, "")
     .replace(/,/g, "")
     .replace(/ L/g, "")
-    .replace(/[()]/g, '');
+    .replace(/[()]/g, '')
+    .replace("Sipulikeitto ", "Onion soup")
+    .replace("-krutonkeja", "with croutons")
+    .replace("BBQ porsasta", "BBQ pork")
+    .replace("Valkoviinissä haudutetut", "stewed in white wine")
+    .replace("lohi-kampelarullat", "Salmon flounder roll")
+    .replace("Perunasosetta", "Mashed potatoes")
+    .replace("Paahtokasviksia", "Oven roasted vegetables")
+    .replace("Talon jälkiruokabufee", "Dessert buffet")
+    .replace("Kermainen lohikeitto", "Creamy salmon soup")
+    .replace("Kiinalainen possu-nuudeliwok", "Chinese Wok with pork and noodles")
+    .replace("Aurajuusto-kalkkunapata", "Turkey stew with Aura cheese")
+    .replace("Riisiä", "Rice")
+    .replace("Keltainen myskikurpitsa- kikhernecurry", "Yellow pumpkin chickpea curry")
 
 
   const dailyMenu = () => {
@@ -84,14 +97,8 @@ request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, h
 
   bot.postMessageToUser(
     'andre.vollrath',
-    "You look hungry, lovely human. It's time to get some nutrition soon:pizza:! Here today's menu at Klondyke:   \n" + dailyMenu(),
+    "You look hungry, lovely human. It's time to get some nutrition soon:pizza:! Here's today's menu at Klondyke:   \n" + dailyMenu(),
     params
-);
-
-bot.postMessageToUser(
-  'tommik',
-  "You look hungry, lovely human. It's time to get some nutrition soon:pizza:! Here today's menu at Klondyke:   \n" + dailyMenu(),
-  params
 );
 
 
