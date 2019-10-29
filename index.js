@@ -101,6 +101,12 @@ request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, h
     params
 );
 
+bot.postMessageToUser(
+  'tommik',
+  "You look hungry, lovely human. It's time to get some nutrition soon:pizza:! Here's today's menu at Klondyke:   \n" + dailyMenu(),
+  params
+);
+
 
   }})
 
