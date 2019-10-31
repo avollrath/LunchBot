@@ -28,7 +28,7 @@ const bot = new SlackBot({
 
 
 let rule = new schedule.RecurrenceRule();
-rule.dayOfWeek = [1,4];
+rule.dayOfWeek = [1];
 rule.hour = 11;
 rule.minute =00;
  
@@ -75,6 +75,10 @@ request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, h
     .replace("Aurajuusto-kalkkunapata", "Turkey stew with Aura cheese")
     .replace("Riisiä", "Rice")
     .replace("Keltainen myskikurpitsa- kikhernecurry", "Yellow pumpkin chickpea curry")
+    .replace("Hernekeittoa", "Pea soup")
+    .replace("Babi ketjap broileria", "Indonesian Babi Ketjap chicken")
+    .replace("Itse tehdyt juurespihvit", "Homemade root vegetable patties")
+    .replace("Vegaanimajoneesikastike", "Homemade root vegetable patties")
 
 
   const dailyMenu = () => {
