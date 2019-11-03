@@ -98,6 +98,8 @@ request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, h
       
     }
 
+    console.log(menuData);
+
 
   const params = {
     icon_emoji: ':robot_face:'
