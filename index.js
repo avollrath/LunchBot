@@ -58,7 +58,7 @@ request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, h
     .replace(/ G/g, "")
     .replace(/FI/g, "")
     .replace(/VE/g, "")
-    .replace(/ G/, "")
+    .replace(/.G/, "")
     .replace(/,/g, "")
     .replace(/ L/g, "")
     .replace(/[()]/g, '')
@@ -82,7 +82,15 @@ request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, h
     .replace("Grillikasviksia", "Grilled vegetables")
     .replace("Pannukakkua", "Pancakes")
     .replace("-hilloa ja kermavaahtoa", "with jam and whipped cream")
-    .replace("Pinaatti- soija lasagnette", "Spinach and soy lasagnette")
+    .replace("Porokeittoa", "Reindeer soup")
+    .replace("Bbq-broileria", "Barbeque chicken")
+    .replace("Mifu- kasvispasta", "Mifu vegetables pasta")
+    .replace("Säräjuureksia", "Root vegetables")
+    .replace("Tomaattikeittoa", "Tomato soup")
+
+
+
+    
 
 
   const dailyMenu = () => {
@@ -98,7 +106,7 @@ request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, h
       
     }
 
-    console.log(menuData);
+    
 
 
   const params = {
