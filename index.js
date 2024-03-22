@@ -3,6 +3,15 @@ const cheerio = require('cheerio');
 require('dotenv').config();
 const express = require('express');
 const { WebClient } = require('@slack/web-api');
+const fs = require('fs');
+const path = require('path');
+
+const CACHE_DIR = path.join(__dirname, 'cache');
+
+if (!fs.existsSync(CACHE_DIR)){
+    fs.mkdirSync(CACHE_DIR, { recursive: true });
+}
+const CACHE_PATH = path.join(CACHE_DIR, 'menuCache.json');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -57,6 +66,18 @@ app.post("/slack/commands", async (req, res) => {
 });
 
 const getMenu = async () => {
+
+  let cache = { menu: "", weekOfYear: 0 };
+  
+  if (fs.existsSync(CACHE_PATH)) {
+    cache = JSON.parse(fs.readFileSync(CACHE_PATH, 'utf8'));
+  }
+  
+  const currentWeek = getWeekNumber(new Date());
+  
+  if (cache.weekOfYear === currentWeek) {
+    return cache.menu;
+  }
   try {
     const response = await axios.get("https://en.klondyketalo.fi/lounaslista");
     const $ = cheerio.load(response.data);
@@ -75,10 +96,10 @@ const getMenu = async () => {
         }).filter(item => item && !item.includes("&amp;"));
 
         menuText += menuItems.map(item => `• ${item}`).join("\n");
-        return false; // Break loop
+        return false;
       }
     });
-
+    fs.writeFileSync(CACHE_PATH, JSON.stringify({ menu: menuText, weekOfYear: currentWeek }), 'utf8');
     return menuText || "Sorry, today's menu could not be found. Please check again later.";
   } catch (error) {
     console.error("Failed to fetch the menu:", error);
@@ -86,9 +107,13 @@ const getMenu = async () => {
   }
 };
 
-getMenu()
-  .then(menu => console.log("Initial menu fetch:", menu))
-  .catch(err => console.error("Initial menu fetch error:", err));
+function getWeekNumber(d) {
+  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+  return weekNo;
+}
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
