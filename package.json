@@ -14,11 +14,8 @@
   "license": "MIT",
   "dependencies": {
     "@slack/web-api": "^7.0.2",
-    "body-parser": "^1.20.2",
     "cheerio": "^1.0.0-rc.3",
     "dotenv": "^8.2.0",
-    "express": "^4.19.1",
-    "request": "^2.88.0",
-    "slackbots": "^1.2.0"
+    "express": "^4.19.1"
   }
 }
