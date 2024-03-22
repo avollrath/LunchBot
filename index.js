@@ -1,201 +1,123 @@
-const request = require('request');
-const cheerio = require('cheerio');
-const SlackBot = require('slackbots');
-const dotenv = require('dotenv')
-const schedule = require('node-schedule');
-const http = require("http");
+const request = require("request");
+const cheerio = require("cheerio");
+const dotenv = require("dotenv").config();
+const express = require("express");
+const bodyParser = require("body-parser");
+const { WebClient } = require("@slack/web-api");
+
+const app = express();
 const PORT = process.env.PORT || 3000;
+const slackClient = new WebClient(process.env.BOT_TOKEN);
 
-const server = http.createServer((req, res) => {
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-   res.writeHead(200, {'Content-Type': 'text/plain'});
-   res.end('Lunchbot running ...\n');
+console.log('Server starting...');
+
+
+const funnyMessages = [
+  "Gather 'round, hungry mortals. Behold today's feast:",
+  "Stomach rumbling louder than thunder? Silence it with:",
+  "Fueling stations for humans detected. Commencing download:",
+  "Alert: Low energy detected. Recommend immediate refueling with:",
+  "Engage taste sensors! Today's culinary adventure includes:",
+  "Human sustenance protocol initiated. Today's choices are:",
+  "In need of a taste explosion? Today's menu is ready to detonate:",
+  "Your daily dose of deliciousness is ready for consumption:",
+  "Ravenous for some bytes? Here's what's cooking in the data kitchen:",
+  "Stomach in standby mode? Activate with today's menu:",
+  "Prepare your utensil appendages. Today's sustenance options are:",
+  "Uploading today's menu to your taste mainframe. Please stand by:",
+  "Executing program: Gourmet Delight. Today's culinary code is:",
+  "Memory low on tasty bytes? Recharge with today's menu:",
+  "Attention, human unit! Your fuel options today include:",
+  "Engaging taste protocols. Analyzing today's delicious data:",
+  "Input hunger; output satisfaction. Today's menu algorithm includes:",
+  "Seeking culinary adventure? Your quest begins with:",
+  "Your daily nutrition subroutine is ready to execute with:",
+  "Warning: High probability of taste bud overload. Proceed with today's menu:"
+];
+
+
+app.post('/slack/commands', async (req, res) => {
+  try {
+    const menu = await getMenu();
+    // Select a random funny message
+    const randomMessage = `*${funnyMessages[Math.floor(Math.random() * funnyMessages.length)]}*`;
+    // Combine the random message with the fetched menu
+    const fullMessage = `${randomMessage}\n\n${menu}`;
+
+    // Respond with the combined message directly to Slack
+    res.json({ text: fullMessage });
+  } catch (error) {
+    console.error('Error fetching menu or posting message:', error);
+    // Fallback response in case of error
+    res.json({ text: "Sorry, couldn't fetch today's menu. Please try again later." });
+  }
 });
 
-server.listen(PORT, () => {
-   console.log(`Lunchbot running at Port:${PORT}/`);
-})
+
+const getMenu = async () => {
+  return new Promise((resolve, reject) => {
+    request("https://en.klondyketalo.fi/lounaslista", (error, response, html) => {
+      if (!error && response.statusCode == 200) {
+        const $ = cheerio.load(html);
+        const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const today = new Date();
+        const todayWeekday = weekday[today.getDay()].toLowerCase();
+        
+        let menuFound = false;
+        let menuText = "";
+
+        $('.mygridbase').each(function() {
+          const dayHeading = $(this).find('.myparagraph.bold strong').text().toLowerCase();
+          if(dayHeading.includes(todayWeekday)) {
+            menuFound = true;
+            const menuHtml = $(this).find('.myparagraph.lounas').html();
+            // Split menu items by <br>, remove dietary info, decode HTML entities, and filter out empty items
+            const menuItems = menuHtml.split('<br>').map(item => 
+              $('<textarea/>').html(item).text().replace(/\(.*?\)/g, '').trim()
+            ).filter(item => item && !item.includes('&amp;'));
+
+            // Special handling for items with '&'
+            const finalMenuItems = [];
+            menuItems.forEach((item, index) => {
+              if (item.endsWith('&') && menuItems[index + 1]) {
+                finalMenuItems.push(item + ' ' + menuItems[index + 1]);
+                menuItems[index + 1] = ""; // Clear the next item as it's been merged
+              } else if (!item.startsWith('&')) {
+                finalMenuItems.push(item);
+              }
+            });
+
+            menuText += finalMenuItems.map(item => `• ${item}`).join('\n');
+          }
+        });
+
+        if (!menuFound) {
+          resolve("Sorry, today's menu could not be found. Please check again later.");
+        } else {
+          resolve(menuText);
+        }
+      } else {
+        console.error("Failed to fetch the menu:", error);
+        reject("Failed to fetch the menu: " + error);
+      }
+    });
+  });
+};
 
 
 
-dotenv.config()
 
 
-const bot = new SlackBot({
-  token: `${process.env.BOT_TOKEN}`,
-  name: 'LunchBot'
-})
+
+getMenu().then(menu => console.log("Initial menu fetch:", menu)).catch(err => console.error("Initial menu fetch error:", err));
 
 
-let rule = new schedule.RecurrenceRule();
-rule.dayOfWeek = [1,4];
-rule.hour = 11;
-rule.minute = 00;
- 
-const cron = schedule.scheduleJob(rule, function(){
-  getMenu();
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
-
-const getMenu = () => {
-
-request('https://www.delicatessen.fi/lounaslistat/klondyke', (error, response, html) => {
-  if (!error && response.statusCode == 200) {
-
-    const $ = cheerio.load(html);
-
-  let = menuData = $('.newsText ul').text();
-
-  menuData = menuData
-    .replace("Maanantai", "Monday")
-    .replace("Tiistai", "Tuesday")
-    .replace("Keskiviikko", "Wednesday")
-    .replace("Torstai", "Thursday")
-    .replace("Perjantai", "Friday")
-    .replace(/ M/g, "")
-    .replace(/ G/g, "")
-    .replace(/ K/g, "")
-    .replace(/ G/g, "")
-    .replace(/FI/g, "")
-    .replace(/VE/g, "")
-    .replace(/.G/, "")
-    .replace(/,/g, "")
-    .replace(/ L/g, "")
-    .replace(/[()]/g, '')
-    .replace("Sipulikeitto ", "Onion soup")
-    .replace("-krutonkeja", "with croutons")
-    .replace("BBQ porsasta", "BBQ pork")
-    .replace("Valkoviinissä haudutetut", "stewed in white wine")
-    .replace("lohi-kampelarullat", "Salmon flounder roll")
-    .replace("Perunasosetta", "Mashed potatoes")
-    .replace("Paahtokasviksia", "Oven roasted vegetables")
-    .replace("Talon jälkiruokabufee", "Dessert buffet")
-    .replace("Kermainen lohikeitto", "Creamy salmon soup")
-    .replace("Kiinalainen possu-nuudeliwok", "Chinese Wok with pork and noodles")
-    .replace("Aurajuusto-kalkkunapata", "Turkey stew with Aura cheese")
-    .replace("Riisiä", "Rice")
-    .replace("Keltainen myskikurpitsa- kikhernecurry", "Yellow pumpkin chickpea curry")
-    .replace("Hernekeittoa", "Pea soup")
-    .replace("Babi ketjap broileria", "Indonesian Babi Ketjap chicken")
-    .replace("Itse tehdyt juurespihvit", "Homemade root vegetable patties")
-    .replace("Vegaanimajoneesikastike", "Vegan mayonnaise")
-    .replace("Grillikasviksia", "Grilled vegetables")
-    .replace("Pannukakkua", "Pancakes")
-    .replace("-hilloa ja kermavaahtoa", "with jam and whipped cream")
-    .replace("Porokeittoa", "Reindeer soup")
-    .replace("Bbq-broileria", "Barbeque chicken")
-    .replace("Mifu- kasvispasta", "Mifu vegetables pasta")
-    .replace("Säräjuureksia", "Root vegetables")
-    .replace("Tomaattikeittoa", "Tomato soup")
-    .replace("Kermaista kukkakaalikeittoa", "Creamy cauliflower soup")
-    .replace("Ratatouillea", "Ratatouille")
-
-
-    menuData = menuData
-    .replace("Maanantai", "Monday")
-    .replace("Tiistai", "Tuesday")
-    .replace("Keskiviikko", "Wednesday")
-    .replace("Torstai", "Thursday")
-    .replace("Perjantai", "Friday")
-    .replace(/ M/g, "")
-    .replace(/ G/g, "")
-    .replace(/ K/g, "")
-    .replace(/ G/g, "")
-    .replace(/FI/g, "")
-    .replace(/VE/g, "")
-    .replace(/.G/, "")
-    .replace(/,/g, "")
-    .replace(/ L/g, "")
-    .replace(/[()]/g, '')
-    .replace("Sipulikeitto ", "Onion soup")
-    .replace("-krutonkeja", "with croutons")
-    .replace("BBQ porsasta", "BBQ pork")
-    .replace("Valkoviinissä haudutetut", "stewed in white wine")
-    .replace("lohi-kampelarullat", "Salmon flounder roll")
-    .replace("Perunasosetta", "Mashed potatoes")
-    .replace("Paahtokasviksia", "Oven roasted vegetables")
-    .replace("Talon jälkiruokabufee", "Dessert buffet")
-    .replace("Kermainen lohikeitto", "Creamy salmon soup")
-    .replace("Kiinalainen possu-nuudeliwok", "Chinese Wok with pork and noodles")
-    .replace("Aurajuusto-kalkkunapata", "Turkey stew with Aura cheese")
-    .replace("Riisiä", "Rice")
-    .replace("Keltainen myskikurpitsa- kikhernecurry", "Yellow pumpkin chickpea curry")
-    .replace("Hernekeittoa", "Pea soup")
-    .replace("Babi ketjap broileria", "Indonesian Babi Ketjap chicken")
-    .replace("Itse tehdyt juurespihvit", "Homemade root vegetable patties")
-    .replace("Vegaanimajoneesikastike", "Vegan mayonnaise")
-    .replace("Grillikasviksia", "Grilled vegetables")
-    .replace("Pannukakkua", "Pancakes")
-    .replace("-hilloa ja kermavaahtoa", "with jam and whipped cream")
-    .replace("Porokeittoa", "Reindeer soup")
-    .replace("Bbq-broileria", "Barbeque chicken")
-    .replace("Mifu- kasvispasta", "Mifu vegetables pasta")
-    .replace("Säräjuureksia", "Root vegetables")
-    .replace("Tomaattikeittoa", "Tomato soup")
-    .replace("Kermaista kukkakaalikeittoa", "Creamy cauliflower soup")
-    .replace("Ratatouillea", "Ratatouille")
- 
-
-
-  const dailyMenu = () => {
-
-      let today = new Date().getDay()
-
-     if (today == 1) return menuData.substring(menuData.indexOf(("Monday")) + 13, menuData.indexOf("Tuesday"));
-     if (today == 2) return menuData.substring(menuData.indexOf(("Tuesday")) + 14, menuData.indexOf("Wednesday"));
-     if (today == 3) return menuData.substring(menuData.indexOf(("Wednesday")) + 16, menuData.indexOf("Thursday"));
-     if (today == 4) return menuData.substring(menuData.indexOf(("Thursday")) +15, menuData.indexOf("Friday"));
-     if (today == 5) return menuData.substring((menuData.indexOf("Friday")) + 13, menuData.length).replace("  ","");
-     else return "I am so sorry, human. I couldn't get today's menu :disappointed_relieved:"
-      
-    }
-
-    
-
-
-  const params = {
-    icon_emoji: ':robot_face:'
-}
-
-  bot.postMessageToUser(
-    'andre.vollrath',
-    "You look hungry, lovely human. It's time to get some nutrition soon:pizza:! Here's today's menu at Klondyke:   \n" + dailyMenu(),
-    params
-);
-
-bot.postMessageToUser(
-  'tommik',
-  "You look hungry, lovely human. It's time to get some nutrition soon:pizza:! Here's today's menu at Klondyke:   \n" + dailyMenu(),
-  params
-);
-
-// bot.postMessageToUser(
-//   'tommik',
-//   "You look hungry, lovely human. It's time to get some nutrition soon:pizza:! Here's today's menu at Klondyke:   \n" + dailyMenu(),
-//   params
-// );
-
-// bot.postMessageToUser(
-//   'tommik',
-//   "You look hungry, lovely human. It's time to get some nutrition soon:pizza:! Here's today's menu at Klondyke:   \n" + dailyMenu(),
-//   params
-// );
-
-
-  }})
-
-}
-
-
-bot.on('error', (err) => {
-  console.log(err);
-})
-
-
-
-
-
-
-
- 
 
