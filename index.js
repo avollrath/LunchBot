@@ -11,6 +11,10 @@ const slackClient = new WebClient(process.env.BOT_TOKEN);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.send('LunchBot is running!');
+});
+
 console.log("Server starting...");
 
 const funnyMessages = [
