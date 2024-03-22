@@ -7,12 +7,13 @@ const { WebClient } = require('@slack/web-api');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const slackClient = new WebClient(process.env.BOT_TOKEN);
+let slackRequestCount = 0;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send('LunchBot is running!');
+  res.send(`LunchBot is running! Slack requests received: ${slackRequestCount}`);
 });
 
 console.log("Server starting...");
@@ -41,6 +42,9 @@ const funnyMessages = [
 ];
 
 app.post("/slack/commands", async (req, res) => {
+
+  slackRequestCount++;
+  console.log(`Slack request count: ${slackRequestCount}`);
   try {
     const menu = await getMenu();
     const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
