@@ -24,15 +24,16 @@ app.use(express.json());
 app.get("/", async (req, res) => {
   try {
     const menu = await getMenu();
+    const formattedMenu = menu.replace(/\n/g, "<br>");
     res.send(
-      `LunchBot is running! Slack requests received: ${slackRequestCount}\n\nToday's Menu:\n${menu}`
+      `LunchBot is running! Slack requests received: ${slackRequestCount}<br><br><strong>Today's Menu:</strong><br><pre>${formattedMenu}</pre>`
     );
   } catch (error) {
     console.error("Error fetching menu for browser display:", error);
     const randomErrorMessage =
       errorMessages[Math.floor(Math.random() * errorMessages.length)];
     res.send(
-      `LunchBot is running! Slack requests received: ${slackRequestCount}\n\n${randomErrorMessage}`
+      `LunchBot is running! Slack requests received: ${slackRequestCount}<br><br>${randomErrorMessage}`
     );
   }
 });
