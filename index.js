@@ -21,10 +21,20 @@ let slackRequestCount = 0;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send(
-    `LunchBot is running! Slack requests received: ${slackRequestCount}`
-  );
+app.get("/", async (req, res) => {
+  try {
+    const menu = await getMenu();
+    res.send(
+      `LunchBot is running! Slack requests received: ${slackRequestCount}\n\nToday's Menu:\n${menu}`
+    );
+  } catch (error) {
+    console.error("Error fetching menu for browser display:", error);
+    const randomErrorMessage =
+      errorMessages[Math.floor(Math.random() * errorMessages.length)];
+    res.send(
+      `LunchBot is running! Slack requests received: ${slackRequestCount}\n\n${randomErrorMessage}`
+    );
+  }
 });
 
 console.log("Server starting...");
@@ -68,17 +78,14 @@ app.post("/slack/commands", async (req, res) => {
     const randomMessage =
       funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
 
-    // Include the Slack request count in the message
-    const fullMessage = `*${randomMessage}*\n\n${menu}\n\nSlack requests received: ${slackRequestCount}`;
+    const fullMessage = `*${randomMessage}*\n\n${menu}`;
     res.json({ text: fullMessage });
   } catch (error) {
     console.error("Error fetching menu or posting message:", error);
 
     const randomErrorMessage =
       errorMessages[Math.floor(Math.random() * errorMessages.length)];
-    const fullErrorMessage = `*${randomErrorMessage}*\nSorry, couldn't fetch today's menu. Please try again later.`;
-
-    res.json({ text: fullErrorMessage });
+    res.json({ text: randomErrorMessage }); // Only send the funny error message
   }
 });
 
