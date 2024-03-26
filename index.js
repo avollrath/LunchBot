@@ -1,17 +1,17 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
-require('dotenv').config();
-const express = require('express');
-const { WebClient } = require('@slack/web-api');
-const fs = require('fs');
-const path = require('path');
+const axios = require("axios");
+const cheerio = require("cheerio");
+require("dotenv").config();
+const express = require("express");
+const { WebClient } = require("@slack/web-api");
+const fs = require("fs");
+const path = require("path");
 
-const CACHE_DIR = path.join(__dirname, 'cache');
+const CACHE_DIR = path.join(__dirname, "cache");
 
-if (!fs.existsSync(CACHE_DIR)){
-    fs.mkdirSync(CACHE_DIR, { recursive: true });
+if (!fs.existsSync(CACHE_DIR)) {
+  fs.mkdirSync(CACHE_DIR, { recursive: true });
 }
-const CACHE_PATH = path.join(CACHE_DIR, 'menuCache.json');
+const CACHE_PATH = path.join(CACHE_DIR, "menuCache.json");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,8 +21,10 @@ let slackRequestCount = 0;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send(`LunchBot is running! Slack requests received: ${slackRequestCount}`);
+app.get("/", (req, res) => {
+  res.send(
+    `LunchBot is running! Slack requests received: ${slackRequestCount}`
+  );
 });
 
 console.log("Server starting...");
@@ -50,70 +52,97 @@ const funnyMessages = [
   "Warning: High probability of taste bud overload. Proceed with today's menu:",
 ];
 
-app.post("/slack/commands", async (req, res) => {
+const errorMessages = [
+  "Seems like my digital taste buds are offline.",
+  "I've encountered a byte error in fetching the menu.",
+  "My culinary circuits are currently scrambled.",
+  "Error: Menu not found. Please try resetting your hunger and try again.",
+];
 
+app.post("/slack/commands", async (req, res) => {
   slackRequestCount++;
   console.log(`Slack request count: ${slackRequestCount}`);
+
   try {
-    const menu = await getMenu();
-    const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
-    const fullMessage = `*${randomMessage}*\n\n${menu}`;
+    const menu = await getMenu(); // This function fetches the daily menu, either from cache or by scraping
+    const randomMessage =
+      funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+
+    // Include the Slack request count in the message
+    const fullMessage = `*${randomMessage}*\n\n${menu}\n\nSlack requests received: ${slackRequestCount}`;
     res.json({ text: fullMessage });
   } catch (error) {
     console.error("Error fetching menu or posting message:", error);
-    res.json({ text: "Sorry, couldn't fetch today's menu. Please try again later." });
+
+    const randomErrorMessage =
+      errorMessages[Math.floor(Math.random() * errorMessages.length)];
+    const fullErrorMessage = `*${randomErrorMessage}*\nSorry, couldn't fetch today's menu. Please try again later.`;
+
+    res.json({ text: fullErrorMessage });
   }
 });
 
 const getMenu = async () => {
+  let cache = { menu: "", date: "" };
 
-  let cache = { menu: "", weekOfYear: 0 };
-  
   if (fs.existsSync(CACHE_PATH)) {
-    cache = JSON.parse(fs.readFileSync(CACHE_PATH, 'utf8'));
+    cache = JSON.parse(fs.readFileSync(CACHE_PATH, "utf8"));
   }
-  
-  const currentWeek = getWeekNumber(new Date());
-  
-  if (cache.weekOfYear === currentWeek) {
+
+  const currentDate = new Date().toISOString().slice(0, 10);
+  if (cache.date === currentDate) {
     return cache.menu;
   }
+
   try {
     const response = await axios.get("https://en.klondyketalo.fi/lounaslista");
     const $ = cheerio.load(response.data);
-    const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const weekday = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
     const todayWeekday = weekday[new Date().getDay()].toLowerCase();
-    
+
     let menuText = "";
 
     $(".mygridbase").each(function () {
-      const dayHeading = $(this).find(".myparagraph.bold strong").text().toLowerCase();
+      const dayHeading = $(this)
+        .find(".myparagraph.bold strong")
+        .text()
+        .toLowerCase();
       if (dayHeading.includes(todayWeekday)) {
         const menuHtml = $(this).find(".myparagraph.lounas").html();
-        const menuItems = menuHtml.split("<br>").map(item => {
-          const text = cheerio.load(`<span>${item}</span>`).text();
-          return text.replace(/\(.*?\)/g, "").trim();
-        }).filter(item => item && !item.includes("&amp;"));
+        const menuItems = menuHtml
+          .split("<br>")
+          .map((item) => {
+            const text = cheerio.load(`<span>${item}</span>`).text();
+            return text.replace(/\(.*?\)/g, "").trim();
+          })
+          .filter((item) => item && !item.includes("&amp;"));
 
-        menuText += menuItems.map(item => `• ${item}`).join("\n");
+        menuText += menuItems.map((item) => `• ${item}`).join("\n");
         return false;
       }
     });
-    fs.writeFileSync(CACHE_PATH, JSON.stringify({ menu: menuText, weekOfYear: currentWeek }), 'utf8');
-    return menuText || "Sorry, today's menu could not be found. Please check again later.";
+    fs.writeFileSync(
+      CACHE_PATH,
+      JSON.stringify({ menu: menuText, date: currentDate }),
+      "utf8"
+    );
+    return (
+      menuText ||
+      "Sorry, today's menu could not be found. Please check again later."
+    );
   } catch (error) {
     console.error("Failed to fetch the menu:", error);
     throw new Error("Failed to fetch the menu: " + error);
   }
 };
-
-function getWeekNumber(d) {
-  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-  return weekNo;
-}
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
