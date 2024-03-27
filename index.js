@@ -119,7 +119,7 @@ const getMenu = async () => {
 
     $(".mygridbase").each(function () {
       const dayHeading = $(this)
-        .find(".myparagraph.bold strong")
+        .find(".myparagraph.bold")
         .text()
         .toLowerCase()
         .trim();
