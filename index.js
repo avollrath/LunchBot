@@ -98,6 +98,9 @@ const getMenu = async () => {
   }
 
   const currentDate = new Date().toISOString().slice(0, 10);
+  // Log the current date for diagnostic purposes
+  console.log(`Current Date: ${currentDate}`);
+
   if (cache.date === currentDate) {
     return cache.menu;
   }
@@ -115,15 +118,21 @@ const getMenu = async () => {
       "Saturday",
     ];
     const todayWeekday = weekday[new Date().getDay()].toLowerCase();
+    // Log the weekday it is looking for
+    console.log(`Looking for menu of: ${todayWeekday}`);
 
     let menuText = "";
+    let foundDay = false; // Diagnostic: Track if the day was found
 
     $(".mygridbase").each(function () {
       const dayHeading = $(this)
         .find(".myparagraph.bold strong")
         .text()
         .toLowerCase();
+      // Log each day heading found in the document for diagnostic purposes
+      console.log(`Found menu for day: ${dayHeading}`);
       if (dayHeading.includes(todayWeekday)) {
+        foundDay = true; // Diagnostic: Day was found
         const menuHtml = $(this).find(".myparagraph.lounas").html();
         const menuItems = menuHtml
           .split("<br>")
@@ -134,9 +143,14 @@ const getMenu = async () => {
           .filter((item) => item && !item.includes("&amp;"));
 
         menuText += menuItems.map((item) => `• ${item}`).join("\n");
-        return false;
+        return false; // Break the loop
       }
     });
+
+    if (!foundDay) {
+      console.log("No matching day found. Menu might be empty for today.");
+    }
+
     fs.writeFileSync(
       CACHE_PATH,
       JSON.stringify({ menu: menuText, date: currentDate }),
@@ -151,6 +165,7 @@ const getMenu = async () => {
     throw new Error("Failed to fetch the menu: " + error);
   }
 };
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
