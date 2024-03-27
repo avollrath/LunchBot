@@ -95,60 +95,57 @@ const getMenu = async () => {
 
   if (fs.existsSync(CACHE_PATH)) {
     cache = JSON.parse(fs.readFileSync(CACHE_PATH, "utf8"));
+    console.log("Cache loaded successfully.");
   }
 
   const currentDate = new Date().toISOString().slice(0, 10);
-  // Log the current date for diagnostic purposes
-  console.log(`Current Date: ${currentDate}`);
+  console.log(`Current Date for comparison: ${currentDate}`);
 
   if (cache.date === currentDate) {
+    console.log("Serving menu from cache.");
     return cache.menu;
   }
 
   try {
+    console.log("Fetching new menu from website.");
     const response = await axios.get("https://en.klondyketalo.fi/lounaslista");
     const $ = cheerio.load(response.data);
-    const weekday = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-    const todayWeekday = weekday[new Date().getDay()].toLowerCase();
-    // Log the weekday it is looking for
-    console.log(`Looking for menu of: ${todayWeekday}`);
+    const today = new Date();
+    // Format today's date as seen on the website, adjust if the format changes
+    const formattedToday = `${today.getDate()}.${today.getMonth() + 1}`;
+    console.log(`Formatted Today for matching: ${formattedToday}`);
 
     let menuText = "";
-    let foundDay = false; // Diagnostic: Track if the day was found
 
     $(".mygridbase").each(function () {
       const dayHeading = $(this)
         .find(".myparagraph.bold strong")
         .text()
-        .toLowerCase();
-      // Log each day heading found in the document for diagnostic purposes
-      console.log(`Found menu for day: ${dayHeading}`);
-      if (dayHeading.includes(todayWeekday)) {
-        foundDay = true; // Diagnostic: Day was found
+        .toLowerCase()
+        .trim();
+
+      console.log(`Found day heading: '${dayHeading}'`);
+
+      const dayDatePattern = new RegExp(`${today.toLocaleString('default', {weekday: 'long'}).toLowerCase()} ${formattedToday}`);
+      if (dayDatePattern.test(dayHeading)) {
+        console.log(`Match found for today: '${dayHeading}'`);
+
         const menuHtml = $(this).find(".myparagraph.lounas").html();
         const menuItems = menuHtml
           .split("<br>")
-          .map((item) => {
-            const text = cheerio.load(`<span>${item}</span>`).text();
-            return text.replace(/\(.*?\)/g, "").trim();
-          })
-          .filter((item) => item && !item.includes("&amp;"));
+          .map((item) => cheerio.load(`<span>${item}</span>`).text())
+          .filter((item) => item && !item.includes("&amp;"))
+          .map((item) => item.replace(/\(.*?\)/g, "").trim());
 
-        menuText += menuItems.map((item) => `• ${item}`).join("\n");
-        return false; // Break the loop
+        menuText = menuItems.map((item) => `• ${item}`).join("\n");
+        return false; // Breaks the loop
       }
     });
 
-    if (!foundDay) {
-      console.log("No matching day found. Menu might be empty for today.");
+    if (!menuText) {
+      console.log("No menu found for today, or no match was found in the document.");
+    } else {
+      console.log("Menu successfully fetched and processed.");
     }
 
     fs.writeFileSync(
@@ -156,13 +153,12 @@ const getMenu = async () => {
       JSON.stringify({ menu: menuText, date: currentDate }),
       "utf8"
     );
-    return (
-      menuText ||
-      "Sorry, today's menu could not be found. Please check again later."
-    );
+    console.log("Cache updated with new menu.");
+
+    return menuText || "Sorry, today's menu could not be found. Please check again later.";
   } catch (error) {
     console.error("Failed to fetch the menu:", error);
-    throw new Error("Failed to fetch the menu: " + error);
+    throw new Error("Failed to fetch the menu: " + error.message);
   }
 };
 
