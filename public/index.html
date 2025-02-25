@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>PasiLunch - Today's Menus</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <meta http-equiv="refresh" content="300"> <!-- Auto-refresh every 5 minutes -->
+</head>
+<body>
+  <!-- Hero Section with Background Image -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="instrument-serif-regular">PasiLunch</h1>
+      <p>Your daily guide to lunch menus near the office</p>
+    </div>
+  </section>
+
+  <header>
+    <div class="stats">
+      <p>Last updated: {{LAST_UPDATED}}</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="menus-container">
+      <!-- MENU_CONTENT -->
+    </div>
+  </main>
+
+ <div class="stats">
+      <p>Slack requests served: {{SLACK_COUNT}}</p>
+    </div>
+  <footer>
+    <p>PasiLunch &copy; 2025 - Your friendly LunchBot by André Vollrath</p>
+  </footer>
+</body>
+</html>
