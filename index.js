@@ -119,7 +119,7 @@ app.get("/", async (req, res) => {
     
     // Update stats with current values - using RegExp to ensure all instances are replaced
     htmlTemplate = htmlTemplate.replace(/{{SLACK_COUNT}}/g, slackRequestCount.toString());
-    htmlTemplate = htmlTemplate.replace(/{{LAST_UPDATED}}/g, new Date().toLocaleString());
+    htmlTemplate = htmlTemplate.replace(/{{LAST_UPDATED}}/g, new Date().toLocaleString('fi-FI', { dateStyle: 'short', timeStyle: 'short' }));
     
     // Set the proper content type
     res.setHeader('Content-Type', 'text/html');
