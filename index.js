@@ -164,6 +164,9 @@ app.post("/slack/commands", async (req, res) => {
       slackMessage += `*${menu.restaurantName}*\n${menu.menu}\n\n`;
     }
     
+    // Append the footer message with a link to PasiLunch
+    slackMessage += "\nEnjoy your lunch and visit <https://lunchbot-btnu.onrender.com/|PasiLunch> for a nicer view of the lunch options";
+    
     res.json({ text: slackMessage });
   } catch (error) {
     console.error("Error fetching menus or posting message:", error);
@@ -841,8 +844,7 @@ body {
   top:0;
   z-index: -5;
   height: 60vh;
-  background: url("https://images.unsplash.com/photo-1576867757603-05b134ebc379?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") no-repeat center center/cover;
-  display: flex;
+  background: url("/bg.jpeg") no-repeat center center/cover;  display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
