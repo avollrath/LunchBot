@@ -165,7 +165,7 @@ app.post("/slack/commands", async (req, res) => {
     }
     
     // Append the footer message with a link to PasiLunch
-    slackMessage += "\nEnjoy your lunch and visit <https://lunchbot-btnu.onrender.com/|PasiLunch> for a nicer view of the lunch options";
+    slackMessage += "\n:robot_face: Enjoy your lunch and visit <https://lunchbot-btnu.onrender.com/|PasiLunch> for a nicer view of the lunch options! :heart:";
     
     res.json({ text: slackMessage });
   } catch (error) {
