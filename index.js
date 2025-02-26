@@ -134,7 +134,11 @@ app.get("/", async (req, res) => {
     
     // Update stats with current values - using RegExp to ensure all instances are replaced
     htmlTemplate = htmlTemplate.replace(/{{SLACK_COUNT}}/g, slackRequestCount.toString());
-    htmlTemplate = htmlTemplate.replace(/{{LAST_UPDATED}}/g, new Date().toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' }));
+    htmlTemplate = htmlTemplate.replace(/{{LAST_UPDATED}}/g, new Date().toLocaleString('en-GB', { 
+      dateStyle: 'short', 
+      timeStyle: 'short',
+      timeZone: 'Europe/Helsinki' 
+    }));
     
     // Set the proper content type
     res.setHeader('Content-Type', 'text/html');
@@ -177,7 +181,10 @@ app.post("/slack/commands", async (req, res) => {
     let slackMessage = `*${randomMessage}*\n\n`;
     
     for (const menu of allMenus) {
-      slackMessage += `*${menu.restaurantName}*\n${menu.menu}\n\n`;
+      // Add red circle emoji and colon after restaurant name
+      slackMessage += `:red_circle: *${menu.restaurantName}*:\n`;
+      // Format menu as code block
+      slackMessage += "```" + menu.menu + "```\n\n";
     }
     
     // Append the footer message with a link to PasiLunch
