@@ -7,6 +7,15 @@ const fs = require("fs");
 const path = require("path");
 const xml2js = require("xml2js"); // Add this package for parsing XML
 
+const scrapeDylanMenu = require('./scrapers/dylan');
+const scrapeSchnitzelMenu = require('./scrapers/schnitzel');
+const scrapeBurgersMenu = require('./scrapers/burgers&wine');
+const scrapeFactoryMenu = require('./scrapers/factory');
+const scrapeHankoAsiaMenu = require('./scrapers/hankoaasia');
+const scrapeLimoneTriplaMenu = require('./scrapers/limone');
+const scrapeTokumaruMenu = require('./scrapers/tokumaru');
+const scrapeSizzleStationMenu = require('./scrapers/sizzlestation');
+
 const CACHE_DIR = path.join(__dirname, "cache");
 
 if (!fs.existsSync(CACHE_DIR)) {
@@ -63,10 +72,9 @@ const restaurants = [
   {
     id: "schnitzel",
     name: "The Schnitzel",
-    url: "https://europe-west1-luncher-7cf76.cloudfunctions.net/api/v1/rss/week/9af82d20-966d-4f10-a4a9-1465a05a7e22/current?days=current&language=en",
+    url: "https://europe-west1-luncher-7cf76.cloudfunctions.net/api/v1/week/9af82d20-966d-4f10-a4a9-1465a05a7e22/active?language=en",
     cachePath: path.join(CACHE_DIR, "schnitzelCache.json"),
-    scrapeFunction: scrapeRssMenu,
-    isRss: true
+    scrapeFunction: scrapeSchnitzelMenu
   },
   {
     id: "hanko",
@@ -79,8 +87,22 @@ const restaurants = [
     id: "tokumaruEng",
     name: "Tokumaru",
     url: "https://www.tokumaru.fi/lunch-menu",
-    cachePath: path.join(CACHE_DIR, "tokumaruEngCache.json"),
-    scrapeFunction: scrapeTokumaruEnglishMenu
+    cachePath: path.join(CACHE_DIR, "tokumaruCache.json"),
+    scrapeFunction: scrapeTokumaruMenu
+  },
+  {
+    id: "dylan",
+    name: "Dylan Böle",
+    url: "https://europe-west1-luncher-7cf76.cloudfunctions.net/api/v1/week/3aba0b64-0d43-41ea-b665-1d2d6c0f2d5e/active?language=en",
+    cachePath: path.join(CACHE_DIR, "dylanCache.json"),
+    scrapeFunction: scrapeDylanMenu
+  },
+  {
+    id: "sizzle",
+    name: "Sizzle Station",
+    url: "https://www.sizzlestation.com/menu/",
+    cachePath: path.join(CACHE_DIR, "sizzleCache.json"),
+    scrapeFunction: scrapeSizzleStationMenu
   }
 ];
 
@@ -295,480 +317,7 @@ async function getRestaurantMenu(restaurant) {
   }
 }
 
-// RSS Feed scraper function
-async function scrapeRssMenu(url) {
-  try {
-    console.log(`Starting to fetch RSS feed from: ${url}`);
-    const response = await axios.get(url);
-    
-    // Parse XML to JS object
-    const parser = new xml2js.Parser({ 
-      explicitArray: false,
-      mergeAttrs: true,
-      normalize: true,
-      explicitCharkey: false,
-      tagNameProcessors: [xml2js.processors.stripPrefix]
-    });
-    
-    const result = await parser.parseStringPromise(response.data);
-    
-    if (!result.rss || !result.rss.channel || !result.rss.channel.item) {
-      console.error("Invalid RSS structure:", JSON.stringify(result, null, 2));
-      throw new Error("Could not parse RSS feed structure");
-    }
-    
-    // Handle both single item and array of items
-    const items = Array.isArray(result.rss.channel.item) 
-      ? result.rss.channel.item 
-      : [result.rss.channel.item];
-    
-    console.log(`Found ${items.length} items in RSS feed`);
-    
-    // Get today's date to find today's menu
-    const today = new Date();
-    const formattedDate = `${today.getDate()}.${today.getMonth() + 1}`;
-    
-    // Find today's menu
-    let todayMenu = null;
-    for (const item of items) {
-      const title = item.title || "";
-      // Check if the title or description contains today's date
-      if (title.includes(formattedDate)) {
-        todayMenu = item;
-        break;
-      }
-    }
-    
-    if (!todayMenu && items.length > 0) {
-      // If we couldn't find today's menu specifically, just use the first item
-      // This assumes the RSS feed is already filtered for today
-      todayMenu = items[0];
-    }
-    
-    if (!todayMenu) {
-      return "Sorry, today's menu could not be found in the RSS feed.";
-    }
-    
-    // Extract and format the menu
-    let menuText = "";
-    
-    if (todayMenu.description) {
-      // Clean up HTML from RSS content
-      const description = todayMenu.description
-        .replace(/<br\s*\/?>/gi, '\n') // Replace <br> with newlines
-        .replace(/<[^>]*>/g, '')       // Remove other HTML tags
-        .replace(/&lt;/g, '<')         // Handle HTML entities
-        .replace(/&gt;/g, '>')
-        .replace(/&amp;/g, '&')
-        .replace(/&nbsp;/g, ' ')
-        .replace(/\n+/g, '\n')         // Remove duplicate newlines
-        .trim();
-      
-      // Format each line with bullet points
-      menuText = description.split('\n')
-        .filter(line => line.trim())
-        .map(line => `• ${line.trim()}`)
-        .join('\n');
-    }
-    
-    console.log("Extracted menu from RSS:", menuText || "No menu found");
-    return menuText || "Sorry, today's menu details could not be found in the RSS feed.";
-  } catch (error) {
-    console.error("Failed to fetch RSS menu:", error);
-    throw error;
-  }
-}
 
-// Tokumaru English scraper function
-async function scrapeTokumaruEnglishMenu() {
-  try {
-    console.log("Starting to scrape Tokumaru English lunch menu...");
-    const response = await axios.get("https://www.tokumaru.fi/lunch-menu");
-    const $ = cheerio.load(response.data);
-
-    // Narrow down to the main content area.
-    const contentElem = $("main.content.menu-content").find(".sqs-html-content").first();
-    if (!contentElem || contentElem.length === 0) {
-      console.log("No content element found.");
-      return "Sorry, today's menu could not be found. Please check again later.";
-    }
-
-    // Get today's day name in English.
-    const today = new Date();
-    const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
-    console.log(`Looking for menu for: ${dayName}`);
-
-    // Look for an <h3> element that includes today's day name.
-    let dayHeading;
-    contentElem.find("h3").each(function () {
-      const h3Text = $(this).text().trim().toLowerCase();
-      if (h3Text.includes(dayName.toLowerCase())) {
-        dayHeading = $(this);
-        return false; // break loop once found
-      }
-    });
-
-    if (!dayHeading || dayHeading.length === 0) {
-      console.log(`Day heading "${dayName}" not found.`);
-      return "Sorry, today's menu could not be found. Please check again later.";
-    }
-
-    // Collect all sibling elements after the day heading until the next <h3>.
-    let menuHtml = "";
-    let sibling = dayHeading.next();
-    while (sibling.length && !sibling.is("h3")) {
-      // Append the text of the sibling (adding a newline for separation)
-      menuHtml += $(sibling).text() + "\n";
-      sibling = sibling.next();
-    }
-    
-    const menuText = menuHtml.trim();
-    console.log("Extracted Tokumaru English menu:", menuText.substring(0, 300) + "...");
-    return menuText || "Sorry, today's menu could not be found. Please check again later.";
-  } catch (error) {
-    console.error("Failed to fetch Tokumaru English lunch menu:", error);
-    throw error;
-  }
-}
-
-// Factory Pasila scraper function
-async function scrapeFactoryMenu() {
-  try {
-    console.log("Starting to scrape Factory menu...");
-    const response = await axios.get("https://ravintolafactory.com/lounasravintolat/ravintolat/factory-pasila/");
-    const $ = cheerio.load(response.data);
-    const today = new Date();
-    
-    // Format today's date as DD.M.YYYY
-    const formattedDate = `${today.getDate()}.${today.getMonth() + 1}.${today.getFullYear()}`;
-    const dayOfWeek = today.toLocaleDateString('fi-FI', { weekday: 'long' });
-    
-    console.log(`Looking for Factory menu for: ${dayOfWeek} ${formattedDate}`);
-    
-    // Debug: Print all heading texts to see what's available
-    console.log("Available headings:");
-    $('.list h3').each(function() {
-      console.log($(this).text().trim());
-    });
-    
-    // Find the current day's heading
-    const todayHeading = $('.list h3').filter(function() {
-      const text = $(this).text().trim();
-      console.log(`Checking heading: ${text}`);
-      return text.includes(formattedDate) || 
-             (text.includes(`${today.getDate()}.${today.getMonth() + 1}`) && 
-              text.toLowerCase().includes(dayOfWeek.toLowerCase()));
-    }).first(); // Take only the first match
-    
-    let menuText = "";
-    
-    if (todayHeading.length > 0) {
-      console.log("Found today's heading:", todayHeading.text().trim());
-      
-      // Get all content until the next h3
-      let currentElement = todayHeading.next();
-      while (currentElement.length && !currentElement.is('h3')) {
-        if (currentElement.is('p')) {
-          const itemText = currentElement.text().trim();
-          if (itemText) {
-            console.log("Found menu item:", itemText);
-            const items = itemText.split('\n').filter(item => item.trim());
-            for (const item of items) {
-              menuText += `• ${item.trim()}\n`;
-            }
-          }
-        }
-        currentElement = currentElement.next();
-      }
-      
-      // If no content found in paragraphs, try looking for other elements
-      if (!menuText) {
-        // Look for any content between this h3 and the next h3
-        const nextH3 = todayHeading.nextAll('h3').first();
-        if (nextH3.length) {
-          const betweenElements = todayHeading.nextUntil(nextH3);
-          betweenElements.each(function() {
-            const text = $(this).text().trim();
-            if (text) {
-              menuText += `• ${text}\n`;
-            }
-          });
-        }
-      }
-    }
-    
-    // If still no menu found, try to find based on day of week
-    if (!menuText) {
-      console.log("Trying to find menu based on day of week...");
-      const finnishDays = {
-        "maanantai": 1, "tiistai": 2, "keskiviikko": 3, 
-        "torstai": 4, "perjantai": 5, "lauantai": 6, "sunnuntai": 0
-      };
-      
-      $('.list h3').each(function() {
-        const headingText = $(this).text().trim().toLowerCase();
-        for (const [day, dayNum] of Object.entries(finnishDays)) {
-          if (headingText.includes(day) && dayNum === today.getDay()) {
-            console.log("Found heading with matching day of week:", headingText);
-            
-            // Get content from all elements until next h3
-            let menuItems = [];
-            let currentElement = $(this).next();
-            while (currentElement.length && !currentElement.is('h3')) {
-              if (currentElement.text().trim()) {
-                menuItems.push(currentElement.text().trim());
-              }
-              currentElement = currentElement.next();
-            }
-            
-            if (menuItems.length > 0) {
-              menuText = menuItems.map(item => `• ${item}`).join('\n');
-              return false; // Break the loop
-            }
-          }
-        }
-      });
-    }
-    
-    console.log("Factory menu text:", menuText || "No menu found");
-    return menuText || "Sorry, today's menu could not be found. Please check again later.";
-  } catch (error) {
-    console.error("Failed to fetch Factory menu:", error);
-    throw error;
-  }
-}
-
-// Burgers & Wine scraper function
-async function scrapeBurgersMenu() {
-  try {
-    console.log("Starting to scrape Burgers & Wine menu...");
-    const response = await axios.get("https://burgersandwine.fi/lounas/");
-    const $ = cheerio.load(response.data);
-    const today = new Date();
-    
-    // Format today as needed to match their format
-    const daysOfWeek = ["SUNNUNTAI", "MAANANTAI", "TIISTAI", "KESKIVIIKKO", "TORSTAI", "PERJANTAI", "LAUANTAI"];
-    const dayOfWeek = daysOfWeek[today.getDay()];
-    const formattedDate = `${today.getDate()}.${today.getMonth() + 1}`;
-    
-    console.log(`Looking for Burgers & Wine menu for: ${dayOfWeek} ${formattedDate}`);
-    
-    // First, try to find today's special burger
-    let menuText = "";
-    const paragraphs = $('p');
-    
-    // Print all paragraphs for debugging
-    console.log("Available paragraphs:");
-    paragraphs.each(function(index) {
-      console.log(`${index}: ${$(this).text().trim()}`);
-    });
-    
-    // Search for today's date/day
-    let todayIndex = -1;
-    paragraphs.each(function(index) {
-      const text = $(this).text().trim().toUpperCase();
-      // Look for something like "TIISTAI 25.2." or just "TIISTAI"
-      if ((text.includes(dayOfWeek) && text.includes(formattedDate)) || 
-          (text === dayOfWeek) || 
-          (text.startsWith(dayOfWeek + " "))) {
-        console.log(`Found today's header at index ${index}: ${text}`);
-        todayIndex = index;
-        return false; // Break the loop
-      }
-    });
-    
-    if (todayIndex >= 0) {
-      menuText += `• ${paragraphs.eq(todayIndex).text().trim()}\n`;
-      
-      // Get menu items until the next day or a separator
-      let i = todayIndex + 1;
-      while (i < paragraphs.length) {
-        const text = paragraphs.eq(i).text().trim();
-        
-        // Stop if we hit another day or a separator
-        if (text.match(/^(MAANANTAI|TIISTAI|KESKIVIIKKO|TORSTAI|PERJANTAI|LAUANTAI|SUNNUNTAI)/) ||
-            text === "—" || text === "-" || text === "–" || text === "—") {
-          break;
-        }
-        
-        if (text) {
-          menuText += `• ${text}\n`;
-        }
-        i++;
-      }
-    } else {
-      // If we couldn't find today specifically, look for this week's menu
-      console.log("No specific day found, looking for this week's menu");
-      
-      // Find "Viikon lounasannos" and include the following content
-      let weeklySpecialIndex = -1;
-      paragraphs.each(function(index) {
-        const text = $(this).text().trim();
-        if (text.includes("Viikon lounasannos")) {
-          weeklySpecialIndex = index;
-          return false;
-        }
-      });
-      
-      if (weeklySpecialIndex >= 0) {
-        menuText += `• ${paragraphs.eq(weeklySpecialIndex).text().trim()}\n`;
-        
-        // Get the next paragraph which should be the description
-        if (weeklySpecialIndex + 1 < paragraphs.length) {
-          const nextText = paragraphs.eq(weeklySpecialIndex + 1).text().trim();
-          if (nextText && nextText !== "—" && !nextText.match(/^(MAANANTAI|TIISTAI|KESKIVIIKKO|TORSTAI|PERJANTAI|LAUANTAI|SUNNUNTAI)/)) {
-            menuText += `• ${nextText}\n`;
-          }
-        }
-      }
-      
-      // Also include the burger information from the top
-      paragraphs.each(function(index) {
-        const text = $(this).text().trim();
-        if (text.includes("Viikon lounasburger") || text.includes("Business Lunch")) {
-          menuText += `• ${text}\n`;
-        }
-      });
-    }
-    
-    // If still no specific menu found, get general lunch information
-    if (!menuText) {
-      console.log("No specific menu found, getting general lunch info");
-      
-      // Look for any lunch-related information
-      paragraphs.each(function() {
-        const text = $(this).text().trim();
-        if (text.includes("lounas") || text.includes("Lounas") || 
-            text.includes("Burger") || text.includes("burger")) {
-          menuText += `• ${text}\n`;
-        }
-      });
-    }
-    
-    console.log("Burgers & Wine menu text:", menuText || "No menu found");
-    return menuText || "Sorry, today's menu could not be found. Please check again later.";
-  } catch (error) {
-    console.error("Failed to fetch Burgers & Wine menu:", error);
-    throw error;
-  }
-}
-
-async function scrapeLimoneTriplaMenu() {
-  try {
-    console.log("Starting to scrape Tripla Limone menu...");
-    const response = await axios.get("https://tripla.limone.fi/lounas/");
-    const $ = cheerio.load(response.data);
-
-    const today = new Date();
-    // Finnish days in order (Sunday = index 0)
-    const daysOfWeek = ["SUNNUNTAI", "MAANANTAI", "TIISTAI", "KESKIVIIKKO", "TORSTAI", "PERJANTAI", "LAUANTAI"];
-    const dayOfWeek = daysOfWeek[today.getDay()];
-    console.log(`Looking for menu items for: ${dayOfWeek}`);
-
-    let menuText = "";
-
-    // Find the h3 element that exactly matches today's day
-    let dayHeading;
-    $("div.page-content h3").each(function () {
-      const headingText = $(this).text().trim().toUpperCase();
-      // Skip headings that are not valid day names (e.g. "LOUNAS 1")
-      if (headingText === dayOfWeek) {
-        dayHeading = $(this);
-        return false; // break out of each
-      }
-    });
-
-    if (dayHeading && dayHeading.length > 0) {
-      console.log("Found heading for today's menu:", dayOfWeek);
-      // Get all elements until the next h3 tag
-      const menuElements = dayHeading.nextUntil("h3");
-
-      menuElements.each(function () {
-        const text = $(this).text().trim();
-        if (text) {
-          menuText += `• ${text}\n`;
-        }
-      });
-    }
-
-    if (!menuText) {
-      menuText = "Sorry, today's menu could not be found. Please check again later.";
-    }
-
-    console.log("Tripla Limone menu text:", menuText);
-    return menuText;
-  } catch (error) {
-    console.error("Failed to fetch Tripla Limone menu:", error);
-    throw error;
-  }
-}
-
-// Hanko Aasia scraper function – returns both dishes for today
-async function scrapeHankoAsiaMenu() {
-  try {
-    console.log("Starting to scrape Hanko Aasia menu...");
-    const response = await axios.get("https://www.hankoaasia.fi/en/lounas/#lounas");
-    const $ = cheerio.load(response.data);
-
-    // Get today's day in English (e.g. "Monday", "Tuesday", etc.)
-    const today = new Date();
-    const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
-    console.log(`Looking for menu for: ${dayName}`);
-
-    // Find the day header element (e.g. an h3 containing "Tuesday")
-    const dayHeader = $("h3.fusion-title-heading")
-      .filter(function() {
-        return $(this).text().trim().toLowerCase().includes(dayName.toLowerCase());
-      })
-      .first();
-
-    if (!dayHeader || dayHeader.length === 0) {
-      console.log("No matching day header found");
-      return "Sorry, today's menu could not be found. Please check again later.";
-    }
-
-    // Get the parent container holding the day's content.
-    // (Assuming each day's dishes are grouped in a single fusion-layout-column)
-    const dayContainer = dayHeader.closest(".fusion-layout-column");
-    if (!dayContainer || dayContainer.length === 0) {
-      console.log("No day container found");
-      return "Sorry, today's menu could not be found. Please check again later.";
-    }
-
-    // Now, within the dayContainer, find all the table blocks that contain dish prices.
-    // We assume each dish group starts with a "div.table-2.menutaulukko"
-    const dishElements = dayContainer.find("div.table-2.menutaulukko");
-    let menuDishes = [];
-    dishElements.each(function(index, elem) {
-      // Get the price from the table block (e.g. "13,50 €")
-      const price = $(elem).find("strong").first().text().trim();
-
-      // Look for the next fusion-title element after this table block.
-      const dishTitleElem = $(elem).nextAll("div.fusion-title").first();
-      // Then, the fusion-text element that immediately follows the dish title holds the description.
-      const dishDescElem = dishTitleElem.nextAll("div.fusion-text").first();
-
-      const dishName = dishTitleElem.text().trim();
-      const dishDesc = dishDescElem.text().trim();
-
-      // Combine the details into a bullet point
-      if (dishName) {
-        menuDishes.push(`• ${dishName} (${price}): ${dishDesc}`);
-      }
-    });
-
-    if (menuDishes.length === 0) {
-      return "Sorry, today's menu could not be found. Please check again later.";
-    }
-
-    const menuText = menuDishes.join("\n");
-    console.log("Hanko Aasia menu text:", menuText);
-    return menuText;
-  } catch (error) {
-    console.error("Failed to fetch Hanko Aasia menu:", error);
-    throw error;
-  }
-}
 
 // Start the server
 app.listen(PORT, () => {
@@ -786,6 +335,9 @@ app.listen(PORT, () => {
   getAllMenus().catch(err => {
     console.error("Error in initial menu fetch:", err);
   });
+  
+  // Set up the keep-alive ping
+  setupKeepAlive();
 });
 
 // Create HTML template if it doesn't exist
@@ -808,6 +360,7 @@ function createHtmlTemplate() {
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <meta http-equiv="refresh" content="300"> <!-- Auto-refresh every 5 minutes -->
+  <script src="text-scramble.js" defer></script>
 </head>
 <body>
   <!-- Hero Section with Background Video -->
@@ -821,14 +374,13 @@ function createHtmlTemplate() {
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <h1 class="instrument-serif-regular">PasiLunch</h1>
-      <p>Your daily guide to lunch menus near the office</p>
+      <p>Your daily guide to lunch menus in Pasila</p>
+      
     </div>
   </section>
 
   <header>
-    <div class="stats">
-      <p>Last updated: {{LAST_UPDATED}}</p>
-    </div>
+     <p class="text-scramble">Wednesday</p>
   </header>
 
   <main>
@@ -839,6 +391,7 @@ function createHtmlTemplate() {
 
  <div class="stats">
       <p>Slack requests served: {{SLACK_COUNT}}</p>
+      <p>Last updated: {{LAST_UPDATED}}</p>
     </div>
   <footer>
     <p>PasiLunch &copy; ${new Date().getFullYear()} - Your friendly LunchBot by André Vollrath</p>
@@ -983,11 +536,25 @@ body {
   margin: 0 auto;
 }
 
+
+
 /* Header */
 header {
   background-color:rgb(255, 255, 255);
   padding: 1rem;
   text-align: center;
+  position: relative;
+}
+
+.text-scramble {
+color:rgb(255, 255, 255);
+font-size: 2rem;
+top: 0;
+position: absolute;
+padding: 0.2rem 0.6rem;
+left: 50%;
+background-color: #A2D2FF;
+transform: translate(-50%, -50%);
 }
 
 .stats p {
@@ -1124,3 +691,32 @@ footer {
     console.log('Created CSS template file');
   }
 }
+
+function setupKeepAlive() {
+  const appUrl = process.env.APP_URL || "https://lunchbot-btnu.onrender.com/";
+  const interval = 14 * 60 * 1000; // 14 minutes (just under the 15-minute limit)
+  
+  console.log(`Setting up keep-alive ping to ${appUrl} every ${interval/60000} minutes`);
+  
+  function pingServer() {
+    axios.get(appUrl)
+      .then(response => {
+        console.log(`[KeepAlive] Pinged server at ${new Date().toLocaleString('en-GB', { 
+          dateStyle: 'short', 
+          timeStyle: 'short',
+          timeZone: 'Europe/Helsinki' 
+        })}: Status ${response.status}`);
+      })
+      .catch(error => {
+        console.error(`[KeepAlive] Error pinging server at ${new Date().toLocaleString('en-GB')}: ${error.message}`);
+      });
+  }
+  
+  // Initial ping after 30 seconds (give the server time to fully start)
+  setTimeout(() => {
+    pingServer();
+    // Then start the regular interval
+    setInterval(pingServer, interval);
+  }, 30000);
+}
+

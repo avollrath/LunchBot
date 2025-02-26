@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <meta http-equiv="refresh" content="300"> <!-- Auto-refresh every 5 minutes -->
+  <script src="text-scramble.js" defer></script>
 </head>
 <body>
   <!-- Hero Section with Background Video -->
@@ -24,14 +25,13 @@
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <h1 class="instrument-serif-regular">PasiLunch</h1>
-      <p>Your daily guide to lunch menus near the office</p>
+      <p>Your daily guide to lunch menus in Pasila</p>
+      
     </div>
   </section>
 
   <header>
-    <div class="stats">
-      <p>Last updated: {{LAST_UPDATED}}</p>
-    </div>
+     <p class="text-scramble">Wednesday</p>
   </header>
 
   <main>
@@ -42,6 +42,7 @@
 
  <div class="stats">
       <p>Slack requests served: {{SLACK_COUNT}}</p>
+      <p>Last updated: {{LAST_UPDATED}}</p>
     </div>
   <footer>
     <p>PasiLunch &copy; 2025 - Your friendly LunchBot by André Vollrath</p>
