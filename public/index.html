@@ -13,8 +13,14 @@
   <meta http-equiv="refresh" content="300"> <!-- Auto-refresh every 5 minutes -->
 </head>
 <body>
-  <!-- Hero Section with Background Image -->
+  <!-- Hero Section with Background Video -->
   <section class="hero">
+    <div class="video-container">
+      <img src="/video-placeholder.jpg" alt="Loading video" class="video-placeholder">
+      <video id="heroVideo" class="hero-video" muted loop playsinline poster="/video-placeholder.jpg" preload="none">
+        <source src="/video.mp4" type="video/mp4">
+      </video>
+    </div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <h1 class="instrument-serif-regular">PasiLunch</h1>
@@ -40,5 +46,36 @@
   <footer>
     <p>PasiLunch &copy; 2025 - Your friendly LunchBot by André Vollrath</p>
   </footer>
+
+  <script>
+    // JavaScript for lazy loading the video
+    document.addEventListener('DOMContentLoaded', function() {
+      const videoElement = document.getElementById('heroVideo');
+      const placeholder = document.querySelector('.video-placeholder');
+      
+      // Create an Intersection Observer
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          // If video is in viewport
+          if (entry.isIntersecting) {
+            videoElement.preload = 'auto';
+            videoElement.load();
+            
+            // When video can play, hide placeholder and play video
+            videoElement.addEventListener('canplay', function() {
+              placeholder.style.opacity = '0';
+              videoElement.style.opacity = '1';
+              videoElement.play();
+              // Disconnect the observer after loading
+              observer.disconnect();
+            });
+          }
+        });
+      }, { threshold: 0.1 }); // Trigger when 10% of the video is visible
+      
+      // Start observing the video element
+      observer.observe(videoElement);
+    });
+  </script>
 </body>
 </html>
