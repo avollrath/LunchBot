@@ -230,7 +230,7 @@ app.post("/slack/commands", async (req, res) => {
       // Convert the HTML menu to Slack markdown format.
       const formattedMenu = convertHtmlToSlackMarkdown(menu.menu);
       // Put the formatted text in a code block.
-      slackMessage += "```\n" + formattedMenu + "\n```\n\n";
+      slackMessage += "\n" + formattedMenu + "\n\n\n";
     }
     
     slackMessage += "\n:robot_face: Enjoy your lunch and visit <https://lunchbot-btnu.onrender.com/|PasiLunch> for a nicer view of the lunch options! :heart:";
