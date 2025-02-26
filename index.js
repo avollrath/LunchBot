@@ -16,11 +16,26 @@ if (!fs.existsSync(CACHE_DIR)) {
 const app = express();
 const PORT = process.env.PORT || 3000;
 const slackClient = new WebClient(process.env.BOT_TOKEN);
-let slackRequestCount = 0;
+const COUNT_FILE = path.join(__dirname, 'slackCount.json');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+function loadSlackCount() {
+  try {
+    const data = fs.readFileSync(COUNT_FILE, 'utf8');
+    return JSON.parse(data).count || 0;
+  } catch (err) {
+    return 0;
+  }
+}
+
+function saveSlackCount(count) {
+  fs.writeFileSync(COUNT_FILE, JSON.stringify({ count }), 'utf8');
+}
+
+// Initialize the count from file
+let slackRequestCount = loadSlackCount();
 
 // Restaurant configuration
 const restaurants = [
@@ -119,7 +134,7 @@ app.get("/", async (req, res) => {
     
     // Update stats with current values - using RegExp to ensure all instances are replaced
     htmlTemplate = htmlTemplate.replace(/{{SLACK_COUNT}}/g, slackRequestCount.toString());
-    htmlTemplate = htmlTemplate.replace(/{{LAST_UPDATED}}/g, new Date().toLocaleString('fi-FI', { dateStyle: 'short', timeStyle: 'short' }));
+    htmlTemplate = htmlTemplate.replace(/{{LAST_UPDATED}}/g, new Date().toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' }));
     
     // Set the proper content type
     res.setHeader('Content-Type', 'text/html');
@@ -151,6 +166,7 @@ function clearCache() {
 // Slack command endpoint
 app.post("/slack/commands", async (req, res) => {
   slackRequestCount++;
+  saveSlackCount(slackRequestCount);
   console.log(`Slack request count: ${slackRequestCount}`);
   
   try {
