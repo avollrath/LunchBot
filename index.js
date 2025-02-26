@@ -189,8 +189,27 @@ function clearCache() {
   });
 }
 
-function stripHtml(html) {
-  return html.replace(/<[^>]+>/g, '');
+function convertHtmlToSlackMarkdown(html) {
+  let text = html;
+  // Replace paragraph tags with newlines.
+  text = text.replace(/<\/p>/gi, "\n");
+  text = text.replace(/<p[^>]*>/gi, "");
+  // Replace <br> tags with newline.
+  text = text.replace(/<br\s*\/?>/gi, "\n");
+  // Remove <ul> and </ul>.
+  text = text.replace(/<\/?ul[^>]*>/gi, "");
+  // Replace <li> with bullet and remove </li>.
+  text = text.replace(/<li[^>]*>/gi, "• ");
+  text = text.replace(/<\/li>/gi, "\n");
+  // Replace <strong> with *
+  text = text.replace(/<\/?strong[^>]*>/gi, "*");
+  // Remove <span> tags.
+  text = text.replace(/<\/?span[^>]*>/gi, "");
+  // Remove any remaining HTML tags.
+  text = text.replace(/<[^>]+>/g, "");
+  
+  // Clean up extra whitespace and newlines.
+  return text.trim();
 }
 
 // Slack command endpoint
@@ -203,15 +222,15 @@ app.post("/slack/commands", async (req, res) => {
     const allMenus = await getAllMenus();
     const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
     
-    // Build the slack message as plain text.
+    // Build the slack message.
     let slackMessage = `*${randomMessage}*\n\n`;
     
-    // For each restaurant, get the plain text version of the menu.
     for (const menu of allMenus) {
       slackMessage += `:red_circle: *${menu.restaurantName}*:\n`;
-      // Strip HTML tags before wrapping in a code block.
-      const plainTextMenu = stripHtml(menu.menu);
-      slackMessage += "```\n" + plainTextMenu + "\n```\n\n";
+      // Convert the HTML menu to Slack markdown format.
+      const formattedMenu = convertHtmlToSlackMarkdown(menu.menu);
+      // Put the formatted text in a code block.
+      slackMessage += "```\n" + formattedMenu + "\n```\n\n";
     }
     
     slackMessage += "\n:robot_face: Enjoy your lunch and visit <https://lunchbot-btnu.onrender.com/|PasiLunch> for a nicer view of the lunch options! :heart:";
@@ -365,6 +384,8 @@ function createHtmlTemplate() {
   <link rel="stylesheet" href="styles.css">
   <meta http-equiv="refresh" content="300"> <!-- Auto-refresh every 5 minutes -->
   <script src="text-scramble.js" defer></script>
+  <script data-goatcounter="https://pasilunch.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
   <!-- Hero Section with Background Video -->
