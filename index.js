@@ -189,6 +189,10 @@ function clearCache() {
   });
 }
 
+function stripHtml(html) {
+  return html.replace(/<[^>]+>/g, '');
+}
+
 // Slack command endpoint
 app.post("/slack/commands", async (req, res) => {
   slackRequestCount++;
@@ -199,17 +203,17 @@ app.post("/slack/commands", async (req, res) => {
     const allMenus = await getAllMenus();
     const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
     
-    // Format all menus for Slack
+    // Build the slack message as plain text.
     let slackMessage = `*${randomMessage}*\n\n`;
     
+    // For each restaurant, get the plain text version of the menu.
     for (const menu of allMenus) {
-      // Add red circle emoji and colon after restaurant name
       slackMessage += `:red_circle: *${menu.restaurantName}*:\n`;
-      // Format menu as code block
-      slackMessage += "```" + menu.menu + "```\n\n";
+      // Strip HTML tags before wrapping in a code block.
+      const plainTextMenu = stripHtml(menu.menu);
+      slackMessage += "```\n" + plainTextMenu + "\n```\n\n";
     }
     
-    // Append the footer message with a link to PasiLunch
     slackMessage += "\n:robot_face: Enjoy your lunch and visit <https://lunchbot-btnu.onrender.com/|PasiLunch> for a nicer view of the lunch options! :heart:";
     
     res.json({ text: slackMessage });
