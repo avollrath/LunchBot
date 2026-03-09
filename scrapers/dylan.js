@@ -61,8 +61,6 @@ async function scrapeDylanMenu(url) {
       const descriptionPart = dish.description ? `<br>${dish.description}` : "";
       return `<li>${titlePart}${descriptionPart}</li>`;
     }).join('') + `</ul>`;
-
-     menuHtml +=`<br/><p>Buffet price: <strong>14,70€</strong></p>`
     
     return menuHtml;
   } catch (error) {

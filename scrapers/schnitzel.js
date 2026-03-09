@@ -66,8 +66,6 @@ async function scrapeSchnitzelMenu(url) {
       return `<li>${titlePart}${descriptionPart}</li>`;
     }).join('') + `</ul>`;
 
-    menuHtml +=`<br/><p>Buffet price: <strong>13,70€</strong></p>`
-    
     return menuHtml;
   } catch (error) {
     console.error("Failed to fetch The Schnitzel JSON menu:", error);

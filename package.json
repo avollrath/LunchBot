@@ -4,7 +4,9 @@
   "description": "informs about the daily lunch menus in Pasila",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "normalize:menus": "node scripts/normalize-menus.js",
+    "refresh:menus": "node -e \"require('./services/menuRefresh').runFullMenuRefresh().then(()=>console.log('Refresh complete')).catch((err)=>{console.error(err);process.exit(1);})\""
   },
   "engines": {
     "node": "18.x"
@@ -13,9 +15,10 @@
   "author": "André Vollrath",
   "license": "MIT",
   "dependencies": {
+    "@google/genai": "^1.44.0",
     "@slack/web-api": "^7.0.2",
     "cheerio": "^1.0.0-rc.3",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.6.0",
     "express": "^4.19.1",
     "xml2js": "^0.6.2"
   }

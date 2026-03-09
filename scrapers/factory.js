@@ -1,128 +1,134 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 
+const DEFAULT_FACTORY_URL =
+  "https://ravintolafactory.com/lounasravintolat/ravintolat/factory-pasila/";
+
+function cleanText(value) {
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function isDailyHeading(text) {
+  return /^(maanantai|tiistai|keskiviikko|torstai|perjantai|lauantai|sunnuntai)\s+\d{1,2}\.\d{1,2}\.\d{4}$/i.test(
+    text
+  );
+}
+
+function extractLinesFromParagraph($, element) {
+  const html = $(element).html() || "";
+  if (!html.includes("<br")) {
+    return [];
+  }
+
+  return html
+    .replace(/<br\s*\/?>/gi, "\n")
+    .split("\n")
+    .map((line) => cleanText(cheerio.load(`<div>${line}</div>`)("div").text()))
+    .filter((line) => line && line !== "\u00a0");
+}
+
 // Factory Pasila scraper function
-async function scrapeFactoryMenu() {
-    try {
-      console.log("Starting to scrape Factory menu...");
-      const response = await axios.get("https://ravintolafactory.com/lounasravintolat/ravintolat/factory-pasila/");
-      const $ = cheerio.load(response.data);
-      const today = new Date();
-      
-      // Format today's date as DD.M.YYYY
-      const formattedDate = `${today.getDate()}.${today.getMonth() + 1}.${today.getFullYear()}`;
-      const dayOfWeek = today.toLocaleDateString('fi-FI', { weekday: 'long' });
-      
-      console.log(`Looking for Factory menu for: ${dayOfWeek} ${formattedDate}`);
-      
-      // Debug: Print all heading texts to see what's available
-      console.log("Available headings:");
-      $('.list h3').each(function() {
-        console.log($(this).text().trim());
+async function scrapeFactoryMenu(url = DEFAULT_FACTORY_URL) {
+  try {
+    console.log("Starting to scrape Factory menu...");
+    const response = await axios.get(url);
+    const $ = cheerio.load(response.data);
+    const today = new Date();
+
+    const formattedDate = `${today.getDate()}.${today.getMonth() + 1}.${today.getFullYear()}`;
+    const dayOfWeek = today.toLocaleDateString("fi-FI", { weekday: "long" });
+    const normalizedDayOfWeek = dayOfWeek.toLowerCase();
+
+    const listContainer =
+      $(".tab-content.lounaslista .list").first().length > 0
+        ? $(".tab-content.lounaslista .list").first()
+        : $(".list").first();
+
+    if (!listContainer.length) {
+      throw new Error("Factory menu container not found.");
+    }
+
+    console.log(`Looking for Factory menu for: ${dayOfWeek} ${formattedDate}`);
+
+    const dayHeadings = listContainer.find("h3").filter((_, element) => {
+      const headingText = cleanText($(element).text());
+      return isDailyHeading(headingText);
+    });
+
+    let todayHeading = dayHeadings
+      .filter((_, element) => {
+        const headingText = cleanText($(element).text()).toLowerCase();
+        return (
+          headingText.includes(formattedDate) &&
+          headingText.startsWith(normalizedDayOfWeek)
+        );
+      })
+      .first();
+
+    if (!todayHeading.length) {
+      todayHeading = dayHeadings
+        .filter((_, element) => {
+          const headingText = cleanText($(element).text());
+          return headingText.includes(formattedDate);
+        })
+        .first();
+    }
+
+    let items = [];
+
+    if (todayHeading.length) {
+      console.log("Found today's heading:", cleanText(todayHeading.text()));
+
+      let current = todayHeading.next();
+      while (current.length) {
+        if (current.is("h3") && isDailyHeading(cleanText(current.text()))) {
+          break;
+        }
+
+        if (current.is("p")) {
+          const lines = extractLinesFromParagraph($, current);
+          if (lines.length > 0) {
+            items.push(...lines);
+          }
+        }
+
+        current = current.next();
+      }
+    }
+
+    if (items.length === 0) {
+      console.log("Failed to match by date heading, trying weekday fallback...");
+      dayHeadings.each((_, element) => {
+        const headingText = cleanText($(element).text()).toLowerCase();
+        if (!headingText.startsWith(normalizedDayOfWeek)) {
+          return;
+        }
+
+        const siblingParagraph = $(element).nextAll("p").first();
+        const lines = extractLinesFromParagraph($, siblingParagraph);
+        if (lines.length > 0) {
+          items = lines;
+          return false;
+        }
       });
-      
-      // Find the current day's heading
-      const todayHeading = $('.list h3').filter(function() {
-        const text = $(this).text().trim();
-        console.log(`Checking heading: ${text}`);
-        return text.includes(formattedDate) || 
-               (text.includes(`${today.getDate()}.${today.getMonth() + 1}`) && 
-                text.toLowerCase().includes(dayOfWeek.toLowerCase()));
-      }).first(); // Take only the first match
-      
-      // Array to collect menu items
-      let items = [];
-      
-      if (todayHeading.length > 0) {
-        console.log("Found today's heading:", todayHeading.text().trim());
-        
-        // Get all content until the next h3
-        let currentElement = todayHeading.next();
-        while (currentElement.length && !currentElement.is('h3')) {
-          if (currentElement.is('p')) {
-            // Use .html() so we can handle <br> tags
-            const htmlContent = currentElement.html() || "";
-            // Replace <br> tags with newline characters
-            const textContent = htmlContent.replace(/<br\s*\/?>/gi, '\n');
-            // Split into lines (in case multiple dishes are in one <p>)
-            const lines = textContent.split('\n').map(line => line.trim()).filter(line => line);
-            for (let line of lines) {
-              // Remove any leading bullet if present
-              if (line.startsWith("•")) {
-                line = line.substring(1).trim();
-              }
-              if (line) {
-                items.push(line);
-              }
-            }
-          }
-          currentElement = currentElement.next();
-        }
-        
-        // If no items found, try alternative method: look for content between this h3 and the next h3
-        if (items.length === 0) {
-          const nextH3 = todayHeading.nextAll('h3').first();
-          if (nextH3.length) {
-            const betweenElements = todayHeading.nextUntil(nextH3);
-            betweenElements.each(function() {
-              const text = $(this).text().trim();
-              if (text) {
-                // Split by newline if needed and push each line
-                const lines = text.split('\n').map(line => line.trim()).filter(line => line);
-                items.push(...lines);
-              }
-            });
-          }
-        }
-      }
-      
-      // Fallback: Try to find menu based on day of week if still no items
-      if (items.length === 0) {
-        console.log("Trying to find menu based on day of week...");
-        const finnishDays = {
-          "maanantai": 1, "tiistai": 2, "keskiviikko": 3, 
-          "torstai": 4, "perjantai": 5, "lauantai": 6, "sunnuntai": 0
-        };
-        
-        $('.list h3').each(function() {
-          const headingText = $(this).text().trim().toLowerCase();
-          for (const [day, dayNum] of Object.entries(finnishDays)) {
-            if (headingText.includes(day) && dayNum === today.getDay()) {
-              console.log("Found heading with matching day of week:", headingText);
-              let menuItems = [];
-              let currentElement = $(this).next();
-              while (currentElement.length && !currentElement.is('h3')) {
-                const text = currentElement.text().trim();
-                if (text) {
-                  menuItems.push(...text.split('\n').map(line => line.trim()).filter(line => line));
-                }
-                currentElement = currentElement.next();
-              }
-              if (menuItems.length > 0) {
-                items = menuItems;
-                return false; // Break the loop
-              }
-            }
-          }
-        });
-      }
-      
-      console.log("Raw menu items:", items);
-      
-      // If items found, wrap them in a proper HTML unordered list
-      let menuHtml = items.length > 0 
-        ? `<ul>${items.map(item => `<li>${item}</li>`).join('')}</ul>`
+    }
+
+    console.log("Raw menu items:", items);
+
+    let menuHtml =
+      items.length > 0
+        ? `<ul>${items.map((item) => `<li>${item}</li>`).join("")}</ul>`
         : "Sorry, today's menu could not be found. Please check again later.";
 
-      menuHtml +=`<br/><p>Buffet price: <strong>13,30€</strong></p>`
-        
-      console.log("Factory menu HTML:", menuHtml);
-      return menuHtml;
-    } catch (error) {
-      console.error("Failed to fetch Factory menu:", error);
-      throw error;
-    }
+    menuHtml += "<br/><p>Buffet price: <strong>13,70 EUR</strong></p>";
+
+    console.log("Factory menu HTML:", menuHtml);
+    return menuHtml;
+  } catch (error) {
+    console.error("Failed to fetch Factory menu:", error);
+    throw error;
   }
-  
-  module.exports = scrapeFactoryMenu;
-  
+}
+
+module.exports = scrapeFactoryMenu;
+

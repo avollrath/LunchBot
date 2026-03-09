@@ -1,0 +1,748 @@
+{
+  "date": "2026-03-09",
+  "generatedAt": "2026-03-09T08:37:54.887Z",
+  "model": "gemini-2.5-flash",
+  "restaurants": [
+    {
+      "cacheFile": "burgersCache.json",
+      "restaurantName": "Burgers & Wine",
+      "sourceLanguage": "fi",
+      "currency": "EUR",
+      "items": [
+        {
+          "nameFi": "Päivän vaihtuva lounasburger & Fries",
+          "nameEn": "Today's Changing Lunch Burger & Fries",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "14,90€",
+          "category": "burger"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Parmesan Smash Burger & Fries",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "burger"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Parmesan Veggie Burger & Fries",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "burger"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Big Smash Burger & Fries",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "burger"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "The Matador Burger & Fries",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "burger"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Ratatouille Veggie Burger & Fries",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "burger"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Havarti Jalapeño Smash Burger & Fries",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "burger"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Havarti Jalapeño Veggie Burger & Fries",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "burger"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Double Cheddar Beast Burger & Fries",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "burger"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Double Cheddar Beast Veggie Burger & Fries",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "burger"
+        }
+      ],
+      "notesFi": [
+        "Kolmen ruokalajin lounasmenu 45–49 €",
+        "Lounasannokset 14,50-29€",
+        "Lunch menu price: 14,50€",
+        "Lunch menu for 3 persons: 39,00€",
+        "Burgerinen menu 45€",
+        "Kolmen ruokalajin lounasmenu 45–49 €Päivän vaihtuva lounasburger & Fries 14,90€ Lounasannokset 14,50-29€"
+      ],
+      "notesEn": [
+        "Three-course lunch menu 45-49 €",
+        "Lunch portions 14.50-29€",
+        "Lunch menu price: 14.50€",
+        "Lunch menu for 3 persons: 39.00€",
+        "Burger menu 45€"
+      ],
+      "rawMenuText": "Kolmen ruokalajin lounasmenu 45–49 €Päivän vaihtuva lounasburger & Fries 14,90€ Lounasannokset 14,50-29€\nKOLMEN RUOKALAJIN LOUNASMENU\nBurgerinen menu 45€\nLOUNASANNOKSET\nPARMESAN SMASH BURGER & FRIES\nPARMESAN VEGGIE BURGER & FRIES\nBig Smash Burger & Fries\nTHE MATADOR BURGER & FRIES\nRATATOUILLE VEGGIE BURGER & FRIES\nHAVARTI JALAPEÑO SMASH BURGER & FRIES\nHAVARTI JALAPEÑO VEGGIE BURGER & FRIES\nDOUBLE CHEDDAR BEAST BURGER & FRIES\nDOUBLE CHEDDAR BEAST VEGGIE BURGER & FRIES\nLunch menu price: 14,50€\nLunch menu for 3 persons: 39,00€",
+      "date": "2026-03-09",
+      "rawMenuHtml": "<ul><li><strong>Tervetuloa nauttimaan lounaasi tyylikkäästi Burgers & Wineen, pasilansillan ja pasilankadun kulmaan. Lounas tarjoillaan ti-pe klo 11-14.</strong></li><li><strong>Kolmen ruokalajin lounasmenu 45–49 €Päivän vaihtuva lounasburger & Fries 14,90€ Lounasannokset 14,50-29€</strong></li><li><strong>KOLMEN RUOKALAJIN LOUNASMENU</strong></li><li><strong>Burgerinen menu 45€</strong></li><li><strong>LOUNASANNOKSET</strong></li><li><strong>PARMESAN SMASH BURGER & FRIES</strong></li><li><strong>PARMESAN VEGGIE BURGER & FRIES</strong></li><li><strong>Big Smash Burger & Fries</strong></li><li><strong>THE MATADOR BURGER & FRIES</strong></li><li><strong>RATATOUILLE VEGGIE BURGER & FRIES</strong></li><li><strong>Big Smash Burger & Fries</strong></li><li><strong>HAVARTI JALAPEÑO SMASH BURGER & FRIES</strong></li><li><strong>HAVARTI JALAPEÑO VEGGIE BURGER & FRIES</strong></li><li><strong>Big Smash Burger & Fries</strong></li><li><strong>DOUBLE CHEDDAR BEAST BURGER & FRIES</strong></li><li><strong>DOUBLE CHEDDAR BEAST VEGGIE BURGER & FRIES</strong></li><li><strong>Big Smash Burger & Fries</strong></li></ul><br/><p>Lunch menu price: <strong>14,50€</strong></p>\n                    <p>Lunch menu for 3 persons: <strong>39,00€</strong></p>"
+    },
+    {
+      "cacheFile": "dylanCache.json",
+      "restaurantName": "Dylan Bole",
+      "sourceLanguage": "en",
+      "currency": "EUR",
+      "items": [
+        {
+          "nameFi": null,
+          "nameEn": "Nepalese Chickpea Soup Fresh Coriander",
+          "descriptionEn": null,
+          "dietary": [
+            "V",
+            "G"
+          ],
+          "priceText": "10,80 €",
+          "category": "soup"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Crispy Roasted Cajun Tofu BBQ and Roasted Vegetables with Basmati Rice",
+          "descriptionEn": null,
+          "dietary": [
+            "V",
+            "G"
+          ],
+          "priceText": "15,00 €",
+          "category": "vegetarian"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Cajun Roasted Salmon with Lime Yogurt Sauce",
+          "descriptionEn": null,
+          "dietary": [
+            "M",
+            "G",
+            "L"
+          ],
+          "priceText": "15,00 €",
+          "category": "main"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Smoked Pork Collar and BBQ Sauce",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "15,00 €",
+          "category": "main"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Steamed Potatoes with Citrus Butter",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "side"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Delicious Berry-banana Quark",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "dessert"
+        }
+      ],
+      "notesFi": [
+        "Buffet price: 14,70€"
+      ],
+      "notesEn": [
+        "Buffet price: 14.70€",
+        "Buffet price: 14,70€"
+      ],
+      "rawMenuText": "Nepalese Chickpea Soup V, G Fresh Coriander 10,80 €\nCrispy Roasted Cajun Tofu Bbq And Roasted Vegetables V, G Basmati Rice V, G 15,00 €\nCajun Roasted Salmon M, G Lime Yogurt Sauce L, G 15,00 €\nSmoked Pork Collar And Bbq Sauce 15,00 €\nSteamed Potatoes With Citrus Butter\n🧡delicious Berry-banana Quark\nBuffet price: 14,70€",
+      "date": "2026-03-09",
+      "rawMenuHtml": "<ul><li><strong>Nepalese Chickpea Soup V, G Fresh Coriander <span>10,80 €</span></strong></li><li><strong>Crispy Roasted Cajun Tofu Bbq And Roasted Vegetables V, G Basmati Rice V, G <span>15,00 €</span></strong></li><li><strong>Cajun Roasted Salmon M, G Lime Yogurt Sauce L, G <span>15,00 €</span></strong></li><li><strong>Smoked Pork Collar And Bbq Sauce <span>15,00 €</span></strong></li><li><strong>Steamed Potatoes With Citrus Butter</strong></li><li><strong>🧡delicious Berry-banana Quark</strong></li></ul><br/><p>Buffet price: <strong>14,70€</strong></p>"
+    },
+    {
+      "cacheFile": "factoryCache.json",
+      "restaurantName": "Factory Pasila",
+      "sourceLanguage": "fi",
+      "currency": "EUR",
+      "items": [
+        {
+          "nameFi": "Vuohenjuustolla höystetty kukkakaalikeitto",
+          "nameEn": "Cauliflower Soup with Goat Cheese",
+          "descriptionEn": null,
+          "dietary": [
+            "VL",
+            "G"
+          ],
+          "priceText": null,
+          "category": "soup"
+        },
+        {
+          "nameFi": "Uunissa paistettua merilohta piparjuuri-smetanakastikkeessa paprikaperunat",
+          "nameEn": "Oven-baked Sea Salmon in Horseradish Sour Cream Sauce with Paprika Potatoes",
+          "descriptionEn": null,
+          "dietary": [
+            "L",
+            "G"
+          ],
+          "priceText": null,
+          "category": "main"
+        },
+        {
+          "nameFi": "Punaviinissä haudutettu kermainen lihapata herkkusienillä",
+          "nameEn": "Creamy Beef Stew Braised in Red Wine with Mushrooms",
+          "descriptionEn": null,
+          "dietary": [
+            "VL",
+            "G"
+          ],
+          "priceText": null,
+          "category": "main"
+        },
+        {
+          "nameFi": "Täyteläinen Butter Tofu kaurakermalla basmatiriisi",
+          "nameEn": "Rich Butter Tofu with Oat Cream and Basmati Rice",
+          "descriptionEn": null,
+          "dietary": [
+            "VE",
+            "G",
+            "VS"
+          ],
+          "priceText": null,
+          "category": "vegan"
+        },
+        {
+          "nameFi": "Rocky road -mousse",
+          "nameEn": "Rocky Road Mousse",
+          "descriptionEn": "Contains nuts.",
+          "dietary": [
+            "L",
+            "G"
+          ],
+          "priceText": null,
+          "category": "dessert"
+        }
+      ],
+      "notesFi": [
+        "Buffet price: 13,70 EUR"
+      ],
+      "notesEn": [
+        "Buffet price: 13.70 EUR"
+      ],
+      "rawMenuText": "Vuohenjuustolla höystetty kukkakaalikeitto (VL+G)\nUunissa paistettua merilohta piparjuuri-smetanakastikkeessa (L+G) paprikaperunat (VE+G)\nPunaviinissä haudutettu kermainen lihapata herkkusienillä (VL+G)\nTäyteläinen Butter Tofu kaurakermalla (VE+G+VS) basmatiriisi (VE+G)\nRocky road -mousse (L+G sisältää pähkinää)\nBuffet price: 13,70 EUR",
+      "date": "2026-03-09",
+      "rawMenuHtml": "<ul><li>Vuohenjuustolla höystetty kukkakaalikeitto (VL+G)</li><li>Uunissa paistettua merilohta piparjuuri-smetanakastikkeessa (L+G) paprikaperunat (VE+G)</li><li>Punaviinissä haudutettu kermainen lihapata herkkusienillä (VL+G)</li><li>Täyteläinen Butter Tofu kaurakermalla (VE+G+VS) basmatiriisi (VE+G)</li><li>Rocky road -mousse (L+G sisältää pähkinää)</li></ul><br/><p>Buffet price: <strong>13,70 EUR</strong></p>"
+    },
+    {
+      "cacheFile": "hankoCache.json",
+      "restaurantName": "Hanko Aasia",
+      "sourceLanguage": "fi",
+      "currency": null,
+      "items": [
+        {
+          "nameFi": "Pieni lajitelma Nigirit:1 lohi, 2 grillattu lohi, 1 ebiMakit:3 kappa, 3 lohikurkku",
+          "nameEn": "Small Assortment: Nigiri (1 salmon, 2 grilled salmon, 1 ebi), Maki (3 cucumber, 3 salmon-cucumber)",
+          "descriptionEn": null,
+          "dietary": [
+            "M",
+            "G"
+          ],
+          "priceText": null,
+          "category": "other"
+        },
+        {
+          "nameFi": "Normaali lajitelma Nigirit:2 lohi, 2 grillattu lohi, 1 ebi, 1 teriyakiebi Makit: 3 kappa, 3 lohikurkku",
+          "nameEn": "Normal Assortment: Nigiri (2 salmon, 2 grilled salmon, 1 ebi, 1 teriyaki ebi), Maki (3 cucumber, 3 salmon-cucumber)",
+          "descriptionEn": null,
+          "dietary": [
+            "M",
+            "G"
+          ],
+          "priceText": null,
+          "category": "other"
+        },
+        {
+          "nameFi": "Iso lajitelma Nigirit: 2 lohi, 2 grillattu lohi, 1 ebi, 1 teriyakiebi, 1 tuna, 1 avocado Makit: 3 kappa, 3 lohikurkku",
+          "nameEn": "Large Assortment: Nigiri (2 salmon, 2 grilled salmon, 1 ebi, 1 teriyaki ebi, 1 tuna, 1 avocado), Maki (3 cucumber, 3 salmon-cucumber)",
+          "descriptionEn": null,
+          "dietary": [
+            "M",
+            "G"
+          ],
+          "priceText": null,
+          "category": "other"
+        },
+        {
+          "nameFi": "Kasvislajitelma Makit:8 lohikurkku, 10 kappa, 8 kasvis-uramaki",
+          "nameEn": "Vegetarian Assortment: Maki (8 salmon-cucumber, 10 cucumber, 8 vegetable uramaki)",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "other"
+        },
+        {
+          "nameFi": "Iso lajitelma Nigirit: 4 lohi, 4 grillattu lohi Makit: 2 kappa, 2 lohi, 2 lohikurkku",
+          "nameEn": "Large Assortment: Nigiri (4 salmon, 4 grilled salmon), Maki (2 cucumber, 2 salmon, 2 salmon-cucumber)",
+          "descriptionEn": null,
+          "dietary": [
+            "M",
+            "G"
+          ],
+          "priceText": null,
+          "category": "other"
+        },
+        {
+          "nameFi": "Kasvislajitelma (tonnikalalla)",
+          "nameEn": "Poke Bowl with Tuna",
+          "descriptionEn": "You can choose the portion with rice, salad or both. Avocado, edamame beans, spring onion, cucumber, marinated red onion, sesame seeds, ginger, house poke sauce, teriyaki sauce and tuna.",
+          "dietary": [
+            "M",
+            "G"
+          ],
+          "priceText": null,
+          "category": "other"
+        }
+      ],
+      "notesFi": [],
+      "notesEn": [],
+      "rawMenuText": "Pieni lajitelmaNigirit:1 lohi, 2 grillattu lohi, 1 ebiMakit:3 kappa, 3 lohikurkku (M), (G)\nNormaali lajitelmaNigirit:2 lohi, 2 grillattu lohi, 1 ebi, 1 teriyakiebi Makit: 3 kappa, 3 lohikurkku (M), (G)\nIso lajitelmaNigirit: 2 lohi, 2 grillattu lohi, 1 ebi, 1 teriyakiebi, 1 tuna, 1 avocado Makit: 3 kappa, 3 lohikurkku (M), (G)\nKasvislajitelmaMakit:8 lohikurkku, 10 kappa, 8 kasvis-uramaki\nIso lajitelmaNigirit: 4 lohi, 4 grillattu lohi Makit: 2 kappa, 2 lohi, 2 lohikurkku (M), (G)\nKasvislajitelmaVoit valita annoksen riisillä, salaatilla tai molemmilla.Avokadoa, edamame papua, kevätsipuli, kurkkua, marinoitua punasipulia, seesaminsiemeniä,inkivääriä, talon poke-kastiketta, teriyaki-kastiketta sekä tonnikalaa (M), (G)",
+      "date": "2026-03-09",
+      "rawMenuHtml": "<ul><li><strong>Pieni lajitelma</strong><br>Nigirit:1 lohi, 2 grillattu lohi, 1 ebiMakit:3 kappa, 3 lohikurkku (M), (G)</li><li><strong>Normaali lajitelma</strong><br>Nigirit:2 lohi, 2 grillattu lohi, 1 ebi, 1 teriyakiebi Makit: 3 kappa, 3 lohikurkku (M), (G)</li><li><strong>Iso lajitelma</strong><br>Nigirit: 2 lohi, 2 grillattu lohi, 1 ebi, 1 teriyakiebi, 1 tuna, 1 avocado Makit: 3 kappa, 3 lohikurkku (M), (G)</li><li><strong>Kasvislajitelma</strong><br>Makit:8 lohikurkku, 10 kappa, 8 kasvis-uramaki</li><li><strong>Pieni lajitelma</strong><br>Nigirit:1 lohi, 2 grillattu lohi, 1 ebiMakit:3 kappa, 3 lohikurkku (M), (G)</li><li><strong>Normaali lajitelma</strong><br>Nigirit:2 lohi, 2 grillattu lohi, 1 ebi, 1 teriyakiebi Makit: 3 kappa, 3 lohikurkku (M), (G)</li><li><strong>Iso lajitelma</strong><br>Nigirit: 4 lohi, 4 grillattu lohi Makit: 2 kappa, 2 lohi, 2 lohikurkku (M), (G)</li><li><strong>Kasvislajitelma</strong><br>Voit valita annoksen riisillä, salaatilla tai molemmilla.Avokadoa, edamame papua, kevätsipuli, kurkkua, marinoitua punasipulia, seesaminsiemeniä,inkivääriä, talon poke-kastiketta, teriyaki-kastiketta sekä tonnikalaa (M), (G)</li></ul>"
+    },
+    {
+      "cacheFile": "limoneCache.json",
+      "restaurantName": "Tripla Limone",
+      "sourceLanguage": "fi",
+      "currency": "EUR",
+      "items": [
+        {
+          "nameFi": "Rigatoni Lohi-Pinaatti",
+          "nameEn": "Rigatoni with Salmon and Spinach",
+          "descriptionEn": "Fried salmon, spinach, light cream-tomato sauce.",
+          "dietary": [
+            "VL"
+          ],
+          "priceText": "14,00",
+          "category": "main"
+        },
+        {
+          "nameFi": "Penne alla Bolognese (Naudanliha)",
+          "nameEn": "Penne alla Bolognese (Beef)",
+          "descriptionEn": "Penne pasta, bolognese sauce, parmesan.",
+          "dietary": [
+            "VL"
+          ],
+          "priceText": "14,00",
+          "category": "main"
+        },
+        {
+          "nameFi": "Insalata al Tonno",
+          "nameEn": "Tuna Salad",
+          "descriptionEn": "Fresh salad, tuna, tomato, cucumber, corn, red onion, olives and vinaigrette dressing.",
+          "dietary": [
+            "VL"
+          ],
+          "priceText": "14,00",
+          "category": "other"
+        },
+        {
+          "nameFi": "Pizza Roma",
+          "nameEn": "Pizza Roma",
+          "descriptionEn": "Minced meat, salami, bacon, mozzarella.",
+          "dietary": [
+            "VL"
+          ],
+          "priceText": "14,00",
+          "category": "other"
+        },
+        {
+          "nameFi": "Pizza Francesca",
+          "nameEn": "Pizza Francesca",
+          "descriptionEn": "Tomato sauce, mozzarella, ham, mushrooms.",
+          "dietary": [
+            "VL"
+          ],
+          "priceText": "14,00",
+          "category": "other"
+        },
+        {
+          "nameFi": "Pollo alla Gorgonzola",
+          "nameEn": "Chicken alla Gorgonzola",
+          "descriptionEn": "Grilled chicken breast fillet, gorgonzola sauce, french fries and seasonal vegetables.",
+          "dietary": [
+            "VL"
+          ],
+          "priceText": "17,50",
+          "category": "main"
+        }
+      ],
+      "notesFi": [],
+      "notesEn": [],
+      "rawMenuText": "RIGATONI LOHI-PINAATTI VL 14,00paistettua lohta, pinaattia, kevyt kerma-tomaattikastike\nPENNE ALLA BOLOGNESE (NAUDANLIHA) VL 14,00pennepastaa, bolognesekastike, parmesan\nINSALATA AL TONNO VL 14,00raikas salaatti, tonnikalaa, tomaattia, kurkkua, maissia, punasipulia, oliiveja ja vinaigrettekastike\nPIZZA ROMA VL 14,00jauheliha, salami, pekoni, mozzarella\nPIZZA FRANCESCA VL 14,00tomaattikastike, mozzarella, kinkku, herkkusieni\nPOLLO ALLA GORGONZOLA VL 17,50grillattu broilerin rintafile, gorgonzolakastike, ranskalaiset ja kauden vihannekset",
+      "date": "2026-03-09",
+      "rawMenuHtml": "<ul><li><strong>RIGATONI LOHI-PINAATTI VL 14,00</strong><br>paistettua lohta, pinaattia, kevyt kerma-tomaattikastike</li><li><strong>PENNE ALLA BOLOGNESE (NAUDANLIHA) VL 14,00</strong><br>pennepastaa, bolognesekastike, parmesan</li><li><strong>INSALATA AL TONNO VL 14,00</strong><br>raikas salaatti, tonnikalaa, tomaattia, kurkkua, maissia, punasipulia, oliiveja ja vinaigrettekastike</li><li><strong>PIZZA ROMA VL 14,00</strong><br>jauheliha, salami, pekoni, mozzarella</li><li><strong>PIZZA FRANCESCA VL 14,00</strong><br>tomaattikastike, mozzarella, kinkku, herkkusieni</li><li><strong>POLLO ALLA GORGONZOLA VL 17,50</strong><br>grillattu broilerin rintafile, gorgonzolakastike, ranskalaiset ja kauden vihannekset</li></ul>"
+    },
+    {
+      "cacheFile": "schnitzelCache.json",
+      "restaurantName": "The Schnitzel",
+      "sourceLanguage": "en",
+      "currency": "EUR",
+      "items": [
+        {
+          "nameFi": null,
+          "nameEn": "Salad Table, Oven-fresh Bread, Coffee and Dessert",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "buffet"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Fried Pan-fried Steaks with Roasted Onions and Pepper Sauce",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "16,00€",
+          "category": "main"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Potatoes with Cream",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "side"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Delicious Chicken in Yogurt Sauce",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "main"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Steamed Jasmine Rice",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "side"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Churros Rolled in Cinnamon Sugar and Chocolate Sauce",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": null,
+          "category": "dessert"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Schnitzel of the Week: Pork Schnitzel, Choron Sauce and French Fries",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "16,00€",
+          "category": "schnitzel"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Burger of the Week: 100% Beef Patty, Fried Halloumi Cheese, Devil's Jam, Aioli Mayonnaise, Lettuce and French Fries",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "16,00€",
+          "category": "burger"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "This Week's Vegetarian Dish: Fried Chickpea and Carrot Patties, Corn Puree, Fried Vegetables, and Vegan Tzatziki",
+          "descriptionEn": null,
+          "dietary": [
+            "VE"
+          ],
+          "priceText": "14,00€",
+          "category": "vegetarian"
+        }
+      ],
+      "notesFi": [
+        "Buffet price: 13,70€"
+      ],
+      "notesEn": [
+        "Buffet price: 13.70€",
+        "Buffet price: 13,70€"
+      ],
+      "rawMenuText": "Salad Table, Oven-fresh Bread And Coffee And Dessert\nFried Pan-fried Steaks With Roasted Onions And Pepper Sauce\nPotatoes With Cream\nDelicious Chicken In Yogurt Sauce\nSteamed Jasmine Rice\nChurros Rolled In Cinnamon Sugar And Chocolate Sauce\nSchnitzel Of The Week: Pork Schnitzel, Choron Sauce And French Fries 16,00€\nBurger Of The Week: 100% Beef Patty, Fried Halloumi Cheese, Devil's Jam, Aioli Mayonnaise, Lettuce And French Fries 16,00€\nThis Week's Vegetarian Dish From The Kitchen: Fried Chickpea And Carrot Patties, Corn Puree, Fried Vegetables, And Vegan Tzatziki 14,00€\nBuffet price: 13,70€",
+      "date": "2026-03-09",
+      "rawMenuHtml": "<ul><li><strong>Salad Table, Oven-fresh Bread And Coffee And Dessert</strong></li><li><strong>Fried Pan-fried Steaks With Roasted Onions And Pepper Sauce</strong></li><li><strong>Potatoes With Cream</strong></li><li><strong>Delicious Chicken In Yogurt Sauce</strong></li><li><strong>Steamed Jasmine Rice</strong></li><li><strong>Churros Rolled In Cinnamon Sugar And Chocolate Sauce</strong></li><li><strong>Schnitzel Of The Week: Pork Schnitzel, Choron Sauce And French Fries <span>16,00€</span></strong></li><li><strong>Burger Of The Week: 100% Beef Patty, Fried Halloumi Cheese, Devil's Jam, Aioli Mayonnaise, Lettuce And French Fries <span>16,00€</span></strong></li><li><strong>This Week's Vegetarian Dish From The Kitchen: Fried Chickpea And Carrot Patties, Corn Puree, Fried Vegetables, And Vegan Tzatziki <span>14,00€</span></strong></li></ul><br/><p>Buffet price: <strong>13,70€</strong></p>"
+    },
+    {
+      "cacheFile": "sizzleCache.json",
+      "restaurantName": "Sizzle Station",
+      "sourceLanguage": "en",
+      "currency": "EUR",
+      "items": [
+        {
+          "nameFi": null,
+          "nameEn": "Sizzler with Chicken",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "13,30 €",
+          "category": "main"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Sizzler with Salmon, Spicy Pork, Bulgogi Beef or Seitan",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "14,10 €",
+          "category": "main"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Bibimbap with Chicken",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "13,30 €",
+          "category": "other"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Bibimbap with Jalo- / Inari Tofu",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "13,70 €",
+          "category": "other"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Bibimbap with Salmon, Spicy Pork or Bulgogi Beef",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "14,10 €",
+          "category": "other"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Donburi with Chicken",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "13,30 €",
+          "category": "don"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Donburi with Jalo- / Inari Tofu",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "13,70 €",
+          "category": "don"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Donburi with Salmon, Spicy Pork or Bulgogi Beef",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "14,10 €",
+          "category": "don"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Poke Bowl with Chicken",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "13,30 €",
+          "category": "other"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Poke Bowl with Jalo Tofu",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "13,70 €",
+          "category": "other"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Poke Bowl with Salmon, Spicy Pork, Bulgogi Beef, Inari Tofu or Seitan",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "14,10 €",
+          "category": "other"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Korean Taco with Chicken, Shrimp, Spicy Pork or Jalo- / Inari Tofu",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "12,80 €",
+          "category": "other"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Ramen with Chicken, Shrimp, Spicy Pork or Bulgogi Beef",
+          "descriptionEn": null,
+          "dietary": [],
+          "priceText": "13,50 €",
+          "category": "ramen"
+        }
+      ],
+      "notesFi": [],
+      "notesEn": [],
+      "rawMenuText": "SizzlersChicken 13,30 €Salmon, Spicy Pork, Bulgogi Beef Tai Seitan 14,10 €\nChicken 13,30 €\nSalmon, Spicy Pork, Bulgogi Beef Tai Seitan 14,10 €\nBibimbapChicken 13,30 €Jalo- / Inaritofu 13,70 €Salmon, Spicy Pork Tai Bulgogi Beef 14,10 €\nJalo- / Inaritofu 13,70 €\nSalmon, Spicy Pork Tai Bulgogi Beef 14,10 €\nDonburiChicken 13,30 €Jalo- / Inaritofu 13,70 €Salmon, Spicy Pork, Tai Bulgogi Beef 14,10 €\nSalmon, Spicy Pork, Tai Bulgogi Beef 14,10 €\nPoke BowlChicken 13,30 €Jalotofu 13,70 €Salmon, Spicy Pork, Bulgogi Beef, Inari-tofu Tai Seitan 14,10 €\nJalotofu 13,70 €\nSalmon, Spicy Pork, Bulgogi Beef, Inari-tofu Tai Seitan 14,10 €\nKorean TacoChicken, Shrimp, Spicy Pork Tai Jalo- / Inaritofu 12,80 €\nChicken, Shrimp, Spicy Pork Tai Jalo- / Inaritofu 12,80 €\nRamenChicken, Shrimp, Spicy Pork Tai Bulgogi Beef 13,50 €\nChicken, Shrimp, Spicy Pork Tai Bulgogi Beef 13,50 €",
+      "date": "2026-03-09",
+      "rawMenuHtml": "<ul><li><strong>Sizzlers</strong><ul><li>Chicken <strong>13,30 €</strong></li><li>Salmon, Spicy Pork, Bulgogi Beef Tai Seitan <strong>14,10 €</strong></li></ul></li><li><strong>Bibimbap</strong><ul><li>Chicken <strong>13,30 €</strong></li><li>Jalo- / Inaritofu <strong>13,70 €</strong></li><li>Salmon, Spicy Pork Tai Bulgogi Beef <strong>14,10 €</strong></li></ul></li><li><strong>Donburi</strong><ul><li>Chicken <strong>13,30 €</strong></li><li>Jalo- / Inaritofu <strong>13,70 €</strong></li><li>Salmon, Spicy Pork, Tai Bulgogi Beef <strong>14,10 €</strong></li></ul></li><li><strong>Poke Bowl</strong><ul><li>Chicken <strong>13,30 €</strong></li><li>Jalotofu <strong>13,70 €</strong></li><li>Salmon, Spicy Pork, Bulgogi Beef, Inari-tofu Tai Seitan <strong>14,10 €</strong></li></ul></li><li><strong>Korean Taco</strong><ul><li>Chicken, Shrimp, Spicy Pork Tai Jalo- / Inaritofu <strong>12,80 €</strong></li></ul></li><li><strong>Ramen</strong><ul><li>Chicken, Shrimp, Spicy Pork Tai Bulgogi Beef <strong>13,50 €</strong></li></ul></li></ul>"
+    },
+    {
+      "cacheFile": "tokumaruCache.json",
+      "restaurantName": "Tokumaru",
+      "sourceLanguage": "en",
+      "currency": "EUR",
+      "items": [
+        {
+          "nameFi": null,
+          "nameEn": "Shoyu Ramen with Chashu Pork",
+          "descriptionEn": "Chashu pork and soy sauce broth.",
+          "dietary": [],
+          "priceText": "14 €",
+          "category": "ramen"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Vegan Tantan Ramen",
+          "descriptionEn": "Fried tofu, shiitake mushrooms and tantan broth.",
+          "dietary": [
+            "V"
+          ],
+          "priceText": "14 €",
+          "category": "ramen"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Panko Chicken Don",
+          "descriptionEn": "Breaded chicken and chili mayonnaise.",
+          "dietary": [],
+          "priceText": "14 €",
+          "category": "don"
+        },
+        {
+          "nameFi": null,
+          "nameEn": "Tofu Curry",
+          "descriptionEn": "Crispy breaded tofu cutlet with Japanese curry.",
+          "dietary": [
+            "V"
+          ],
+          "priceText": "14 €",
+          "category": "vegetarian"
+        }
+      ],
+      "notesFi": [
+        "Jokaisessa ramenissa on Tokumarun käsintehdyt nuudelit, hitaasti keitetty liemi, kasvikset ja nori-merilevä. Liha-annosten mukana tulee marinoitu kananmuna.",
+        "Kulho sushiriisiä, teriyaki-kastiketta, vihreää salaattia seesamikastikkeella, edamame-papuja, wakamea, kirsikkatomaattia ja marinoitua daikonia."
+      ],
+      "notesEn": [
+        "Each ramen has Tokumaru handmade noodles, slowly boiled broth, vegetables and nori seaweed. Meat portions come with marinated egg.",
+        "Bowl of sushi rice, teriyaki sauce, green salad with sesame dressing, edamame beans, wakame, cherry tomato and marinated daikon."
+      ],
+      "rawMenuText": "Ramen 14 €Each ramen has Tokumaru handmade noodles, slowly boiled broth, vegetables and nori seaweed. Meat portions come with marinated egg\nShoyu RamenChashu pork and soy sauce broth\nVegan Tantan Ramen (v)Fried tofu, shiitake mushrooms and tantan broth\nDon 14 €Bowl of sushi rice, teriyaki sauce, green salad with sesame dressing, edamame beans, wakame, cherry tomato and marinated daikon.\nPanko Chicken DonBreaded chicken and chili mayonnaise\nTofu Curry (v)Crispy breaded tofu cutlet with Japanese curry",
+      "date": "2026-03-09",
+      "rawMenuHtml": "<ul><li><strong>Ramen 14 €</strong><br>Each ramen has Tokumaru handmade noodles, slowly boiled broth, vegetables and nori seaweed. Meat portions come with marinated egg</li><li><strong>Shoyu Ramen</strong><br>Chashu pork and soy sauce broth</li><li><strong>Vegan Tantan Ramen (v)</strong><br>Fried tofu, shiitake mushrooms and tantan broth</li><li><strong>Don 14 €</strong><br>Bowl of sushi rice, teriyaki sauce, green salad with sesame dressing, edamame beans, wakame, cherry tomato and marinated daikon.</li><li><strong>Panko Chicken Don</strong><br>Breaded chicken and chili mayonnaise</li><li><strong>Tofu Curry (v)</strong><br>Crispy breaded tofu cutlet with Japanese curry</li></ul>"
+    },
+    {
+      "cacheFile": "vaunuCache.json",
+      "restaurantName": "Vaunu",
+      "sourceLanguage": "fi",
+      "currency": "EUR",
+      "items": [
+        {
+          "nameFi": "Makkarakeittoa",
+          "nameEn": "Sausage Soup",
+          "descriptionEn": null,
+          "dietary": [
+            "M",
+            "G"
+          ],
+          "priceText": null,
+          "category": "soup"
+        },
+        {
+          "nameFi": "Kotimaista naapurin kananpoikaa & metsäsienikastiketta",
+          "nameEn": "Domestic Chicken & Forest Mushroom Sauce",
+          "descriptionEn": null,
+          "dietary": [
+            "M",
+            "G",
+            "L"
+          ],
+          "priceText": null,
+          "category": "main"
+        },
+        {
+          "nameFi": "Paahdettua kotimaista kirjolohta & miso-majoneesia",
+          "nameEn": "Roasted Domestic Rainbow Trout & Miso Mayonnaise",
+          "descriptionEn": null,
+          "dietary": [
+            "M",
+            "G"
+          ],
+          "priceText": null,
+          "category": "main"
+        },
+        {
+          "nameFi": "Tofua punaisessa thai curryssa",
+          "nameEn": "Tofu in Red Thai Curry",
+          "descriptionEn": null,
+          "dietary": [
+            "VE",
+            "G"
+          ],
+          "priceText": null,
+          "category": "vegan"
+        },
+        {
+          "nameFi": "Pehmisbaari",
+          "nameEn": "Soft Serve Ice Cream Bar",
+          "descriptionEn": null,
+          "dietary": [
+            "L",
+            "G"
+          ],
+          "priceText": null,
+          "category": "dessert"
+        }
+      ],
+      "notesFi": [
+        "Lounasbufee 13,70€ eläkeläislounas klo 12 jälkeen 11,20€"
+      ],
+      "notesEn": [
+        "Lunch buffet 13.70€, senior lunch after 12 PM 11.20€"
+      ],
+      "rawMenuText": "Makkarakeittoa (M,G)\nKotimaista naapurin kananpoikaa (M,G) & metsäsienikastiketta (L,G)\nPaahdettua kotimaista kirjolohta (M,G) & miso-majoneesia (M)\nTofua punaisessa thai curryssa (VE,G)\nPehmisbaari (L,G)\nLounasbufee 13,70€ eläkeläislounas klo 12 jälkeen 11,20€",
+      "date": "2026-03-09",
+      "rawMenuHtml": "<ul><li>Makkarakeittoa (M,G)</li><li>Kotimaista naapurin kananpoikaa (M,G) & metsäsienikastiketta (L,G)</li><li>Paahdettua kotimaista kirjolohta (M,G) & miso-majoneesia (M)</li><li>Tofua punaisessa thai curryssa (VE,G)</li><li>Pehmisbaari (L,G)</li></ul><br/><p>Lounasbufee 13,70€ eläkeläislounas klo 12 jälkeen 11,20€</p>"
+    }
+  ]
+}

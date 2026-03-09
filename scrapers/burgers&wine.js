@@ -142,8 +142,6 @@ async function scrapeBurgersMenu() {
             .join("")}</ul>`
         : "Sorry, today's menu could not be found. Please check again later.";
 
-    menuHtml += `<br/><p>Lunch menu price: <strong>14,50€</strong></p>
-                    <p>Lunch menu for 3 persons: <strong>39,00€</strong></p>`;
 
     console.log("Burgers & Wine menu HTML:", menuHtml);
     return menuHtml;
