@@ -51,12 +51,13 @@
       <p>Last updated: {{LAST_UPDATED}}</p>
     </div>
   <footer>
-    <p>PasiLunch &copy; 2025 - Your friendly LunchBot by André Vollrath</p>
+    <p>PasiLunch &copy; <span id="currentYear"></span> - Your friendly LunchBot by <a href="https://www.vollrath.dev" target="_blank" rel="noopener noreferrer">Andr&eacute; Vollrath</a></p>
   </footer>
 
   <script>
     // JavaScript for lazy loading the video
     document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('currentYear').textContent = new Date().getFullYear();
       const videoElement = document.getElementById('heroVideo');
       const placeholder = document.querySelector('.video-placeholder');
       

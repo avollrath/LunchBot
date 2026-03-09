@@ -2,7 +2,12 @@ const axios = require("axios");
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const { ensureMenusAreFresh, NORMALIZED_MENUS_PATH } = require("./services/menuRefresh");
+const {
+  ensureMenusAreFresh,
+  NORMALIZED_MENUS_PATH,
+  readNormalizedMenusIfExists,
+  isNormalizedMenusFresh,
+} = require("./services/menuRefresh");
 
 require("dotenv").config();
 
@@ -12,7 +17,7 @@ const COUNT_FILE = path.join(__dirname, "slackCount.json");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public"), { index: false }));
 
 const funnyMessages = [
   "Gather 'round, hungry mortals. Behold today's feast:",
@@ -205,6 +210,14 @@ app.get("/api/menus/normalized", async (req, res) => {
 
 app.get("/", async (req, res) => {
   try {
+    console.log("Rendering homepage dynamically");
+    const currentNormalized = readNormalizedMenusIfExists();
+    if (!currentNormalized) {
+      console.log("Homepage render: normalized menus missing, refresh will be triggered");
+    } else if (!isNormalizedMenusFresh(currentNormalized)) {
+      console.log("Homepage render: normalized menus stale, refresh will be triggered");
+    }
+
     const normalizedMenus = await ensureMenusAreFresh();
     const menuContent = generateNormalizedHtmlMenuContent(normalizedMenus.restaurants || []);
 
